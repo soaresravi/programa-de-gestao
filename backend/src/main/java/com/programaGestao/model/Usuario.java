@@ -1,28 +1,21 @@
 package com.programaGestao.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuarios")
 
 public class Usuario extends PanacheEntity {
 
-    @NotBlank(message = "Nome é obrigatório")
     public String nome;
 
-    @NotBlank(message = "Email é obrigatório")
-    @Email(message = "Email é inválido")
     @Column(unique = true)
     public String email;
 
-    @NotBlank(message = "Senha é obrigatório")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String senha;
     
 }
