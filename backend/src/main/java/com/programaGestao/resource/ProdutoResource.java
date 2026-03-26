@@ -1,10 +1,9 @@
 package com.programaGestao.resource;
 
-import com.programaGestao.model.MateriaPrima;
-import com.programaGestao.model.MateriaPrimaProduto;
-import com.programaGestao.model.Produto;
-import com.programaGestao.dto.MateriaPrimaProdutoDTO;
-import com.programaGestao.dto.ProdutoDTO;
+import com.programaGestao.model.*;
+import com.programaGestao.dto.*;
+import com.programaGestao.enums.Enums.*;
+
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -13,6 +12,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +84,75 @@ public class ProdutoResource {
 
     @GET
     
-    public Response listar() {
-        List<Produto> produtos = Produto.listAll();
+    public Response listar(@QueryParam("tipoProduto") TipoProduto tipoProduto, @QueryParam("modelo") String modelo, @QueryParam("search") String search, @QueryParam("ordenar") @DefaultValue("nome_asc") String ordenar) {      
+        
+        StringBuilder query = new StringBuilder("1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (tipoProduto != null) {
+            query.append(" and tipo = ?").append(params.size() + 1);
+            params.add(tipoProduto);
+        }
+
+        if (modelo != null && !modelo.trim().isEmpty()) {
+            query.append(" and modelo = ?").append(params.size() + 1);
+            params.add(modelo);
+        }
+
+        if (search != null && !search.trim().isEmpty()) {
+            query.append(" and nome like ?").append(params.size() + 1);
+            params.add("%" + search + "%");
+        }
+
+        String hql = "from Produto p where " + query.toString();
+
+        switch (ordenar) {
+
+            case "preco_asc":
+                hql += " order by p.precoVenda asc";
+                break;
+            case "preco_desc":
+                hql += " order by p.precoVenda desc";
+                break;
+            case "nome_desc":
+                hql += " order by p.nome desc";
+                break;
+            case "nome_asc":
+            default:
+                hql += " order by p.nome asc";
+                break;
+        }
+
+        List<Produto> produtos = Produto.find(hql, params.toArray()).list();
         return Response.ok(produtos).build();
+    }
+
+    @GET
+    @Path("/total")
+
+    public Response getTotal(@QueryParam("tipoProduto") TipoProduto tipoProduto, @QueryParam("modelo") String modelo, @QueryParam("search") String search) {
+
+        StringBuilder query = new StringBuilder("1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (tipoProduto != null) {
+            query.append(" and tipo = ?").append(params.size() + 1);
+            params.add(tipoProduto);
+        }
+
+        if (modelo != null && !modelo.trim().isEmpty()) {
+            query.append(" and modelo = ?").append(params.size() + 1);
+            params.add(modelo);
+        }
+
+        if (search != null && !search.trim().isEmpty()) {
+            query.append(" and nome like ?").append(params.size() + 1);
+            params.add("%" + search + "%");
+        }
+
+        long total = Produto.count("where " + query.toString(), params.toArray());
+        return Response.ok(new TotalResponse(total)).build();
+
     }
 
     @GET
@@ -188,5 +254,15 @@ public class ProdutoResource {
 
         produto.delete();
         return Response.noContent().build();
+    }
+
+    private static class TotalResponse {
+
+        public long total;
+
+        public TotalResponse(long total) {
+            this.total = total;
+        }
+
     }
 }
