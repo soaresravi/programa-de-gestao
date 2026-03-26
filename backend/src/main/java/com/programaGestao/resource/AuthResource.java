@@ -4,6 +4,7 @@ import com.programaGestao.model.Usuario;
 import com.programaGestao.model.RecuperacaoSenha;
 
 import com.programaGestao.dto.LoginDTO;
+import com.programaGestao.dto.TokenResponse;
 import com.programaGestao.dto.UserDTO;
 import com.programaGestao.dto.RedefinirSenhaRequest;
 import com.programaGestao.dto.CodigoRequest;
@@ -20,7 +21,11 @@ import jakarta.ws.rs.core.Response;
 import org.mindrot.jbcrypt.BCrypt;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
+import io.smallrye.jwt.build.Jwt;
+
 import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.Set;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +66,9 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Email ou senha inválidos").build();
         }
 
-        return Response.ok(usuario).build();
+        String token = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).expiresIn(Duration.ofHours(8)).sign();
+
+        return Response.ok(new TokenResponse(token, usuario.id, usuario.nome, usuario.email)).build();
     }
     
 

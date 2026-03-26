@@ -5,10 +5,9 @@ import jakarta.persistence.*;
 
 @Entity
 
-public class MateriaPrima extends PanacheEntity {
+public class Cidade extends PanacheEntity {
     
     public String nome;
-    public Integer quantidade;
-    public Double valorUnitario;
-
+    public Double valorFrete;
+    
 }
