@@ -18,4 +18,5 @@ public class Despesa extends PanacheEntity {
     public StatusDespesa status;
 
     public String tipo;
+    public Boolean fornecedor;
 }

@@ -19,4 +19,6 @@ public class DespesaDTO {
 
     @NotBlank(message = "Tipo é obrigatório (casa ou loja)")
     public String tipo;
+
+    public Boolean fornecedor;
 }
