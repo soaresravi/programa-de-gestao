@@ -1,18 +1,17 @@
 package com.programaGestao.resource;
 
 import com.programaGestao.model.Usuario;
+import com.programaGestao.security.SecurityResource;
 import com.programaGestao.model.RecuperacaoSenha;
 
-import com.programaGestao.dto.LoginDTO;
-import com.programaGestao.dto.TokenResponse;
-import com.programaGestao.dto.UserDTO;
-import com.programaGestao.dto.RedefinirSenhaRequest;
-import com.programaGestao.dto.CodigoRequest;
-import com.programaGestao.dto.EmailRequest;
+import com.programaGestao.dto.*;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.inject.Inject;
+
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.Context;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -70,7 +69,68 @@ public class AuthResource {
 
         return Response.ok(new TokenResponse(token, usuario.id, usuario.nome, usuario.email)).build();
     }
-    
+
+    @PUT
+    @Path("/me")
+    @Transactional
+
+    public Response atualizarPerfil(@Valid AtualizarPerfilDTO dto, @Context SecurityContext ctx) {
+
+        Long usuarioId = SecurityResource.getUsuarioId(ctx);
+        Usuario usuario = Usuario.findById(usuarioId);
+
+        if (usuario == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Usuário não encontrado").build();
+        }
+
+        if (dto.nome != null && !dto.nome.trim().isEmpty()) {
+            usuario.nome = dto.nome;
+        }
+
+        if (dto.email != null && !dto.email.trim().isEmpty() && !dto.email.equals(usuario.email)) {
+
+            if (Usuario.find("email", dto.email).count() > 0) {
+                return Response.status(Response.Status.CONFLICT).entity("Email já cadastrado").build();
+            }
+
+            usuario.email = dto.email;
+
+        }
+
+        if (dto.senhaAtual != null && dto.novaSenha != null && !dto.novaSenha.trim().isEmpty()) {
+
+            if (BCrypt.checkpw(dto.senhaAtual, usuario.senha)) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Senha atual incorreta").build();
+            }
+
+            usuario.senha = BCrypt.hashpw(dto.novaSenha, BCrypt.gensalt());
+
+        }
+
+        usuario.persist();
+
+        usuario.senha = null;
+        return Response.ok(usuario).build();
+
+    }
+
+    @DELETE
+    @Path("/me")
+    @Transactional
+
+    public Response excluirConta(@Context SecurityContext ctx) {
+
+        Long usuarioId = SecurityResource.getUsuarioId(ctx);
+        Usuario usuario = Usuario.findById(usuarioId);
+
+        if (usuario == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Usuário não encontrado").build();
+        }
+
+        usuario.delete();
+        return Response.noContent().build();
+        
+    }
 
     @Inject
     Mailer mailer;
