@@ -236,8 +236,11 @@ public class DespesaResource {
         html.append("</div>");
 
         html.append("  \n");
+        html.append("<table>");
         html.append("<thead>\n");
+        html.append("<tr>");
         html.append("<th>Nome</th><th>Valor</th><th>Data Pagamento</th><th>Data Vencimento</th><th>Status</th>");
+        html.append("</tr>");
         html.append("</thead><tbody>");
 
         for (Despesa d : despesas) {
