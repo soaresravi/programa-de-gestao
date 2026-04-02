@@ -17,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
+        <Route path="/cadastro" element={<Cadastro />} /> 
       </Routes>  
 
     </Suspense>  

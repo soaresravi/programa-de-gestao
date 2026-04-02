@@ -3,7 +3,7 @@ package com.programaGestao.resource;
 import com.programaGestao.model.Usuario;
 import com.programaGestao.security.SecurityResource;
 import com.programaGestao.model.RecuperacaoSenha;
-
+import com.programaGestao.model.RefreshToken;
 import com.programaGestao.dto.*;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +25,7 @@ import io.smallrye.jwt.build.Jwt;
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.util.Set;
+import java.util.UUID;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -66,8 +67,49 @@ public class AuthResource {
         }
 
         String token = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).expiresIn(Duration.ofHours(8)).sign();
+        String refreshToken = UUID.randomUUID().toString();
 
-        return Response.ok(new TokenResponse(token, usuario.id, usuario.nome, usuario.email)).build();
+        RefreshToken rt = new RefreshToken();
+
+        rt.token = refreshToken;
+        rt.usuarioId = usuario.id;
+        rt.expiracao = LocalDateTime.now().plusDays(7);
+        rt.usado = false;
+        rt.persist();
+
+        return Response.ok(new TokenResponse(token, refreshToken, usuario.id, usuario.nome, usuario.email)).build();
+    }
+
+    @POST
+    @Path("/refresh")
+    @Transactional
+
+    public Response refresh(@Valid RefreshTokenRequest request) {
+        
+        RefreshToken rt = RefreshToken.find("token = ?1 and usado = false and expiracao > ?2", request.refreshToken, LocalDateTime.now()).firstResult();
+
+        if (rt == null) {
+            return Response.status(Response.Status.FORBIDDEN).entity("Refresh token inválido").build();
+        }
+
+        rt.usado = true;
+        rt.persist();
+
+        Usuario usuario = Usuario.findById(rt.usuarioId);
+
+        String newToken = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).expiresIn(Duration.ofHours(8)).sign();
+        String newRefreshToken = UUID.randomUUID().toString();
+
+        RefreshToken newRt = new RefreshToken();
+
+        newRt.token = newRefreshToken;
+        newRt.usuarioId = usuario.id;
+        newRt.expiracao = LocalDateTime.now().plusDays(7);
+        newRt.usado = false;
+        newRt.persist();
+
+        return Response.ok(new TokenResponse(newToken, newRefreshToken, usuario.id, usuario.nome, usuario.email)).build();
+        
     }
 
     @PUT
@@ -99,7 +141,7 @@ public class AuthResource {
 
         if (dto.senhaAtual != null && dto.novaSenha != null && !dto.novaSenha.trim().isEmpty()) {
 
-            if (BCrypt.checkpw(dto.senhaAtual, usuario.senha)) {
+            if (!BCrypt.checkpw(dto.senhaAtual, usuario.senha)) {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Senha atual incorreta").build();
             }
 
@@ -108,8 +150,6 @@ public class AuthResource {
         }
 
         usuario.persist();
-
-        usuario.senha = null;
         return Response.ok(usuario).build();
 
     }

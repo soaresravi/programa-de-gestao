@@ -1,0 +1,217 @@
+@use '../../styles/variables' as *;
+
+.container {
+  
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('../../assets/image-Photoroom.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+  }
+
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  min-height: 500px; 
+  background-color: $fundo-padrao;
+  border-radius: $borda-arredondada;
+  overflow: hidden;
+  box-shadow: $sombra-card;
+  border-radius: 10px;
+}
+
+.leftPanel {
+  flex: 1;
+  background-color: $verde-principal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  max-width: 390px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.leftContent {
+  
+  text-align: center;
+  max-width: 400px;
+  
+  h1 {
+    color: $branco;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-family: $fonte-principal;
+  }
+  
+  p {
+    color: $branco;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    font-family: $fonte-principal;
+  }
+
+}
+
+.loginButton {
+  
+  background: transparent;
+  border: 1px solid $branco;
+  color: $branco;
+  padding: 5px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: $borda-ultra-arredondada-botao;
+  cursor: pointer;
+  font-family: $fonte-principal;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+  }
+
+}
+
+.rightPanel {
+  flex: 1;
+  background-color: $fundo-padrao;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  color: $preto;
+  text-align: center;
+  margin-bottom: 15px;
+  font-family: $fonte-principal;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: $branco;
+}
+
+.input {
+  width: 100%;
+  padding: 5px 7px 9px 40px;
+  border: none;
+  border-radius: $borda-ultra-arredondada-botao;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  background-color: $verde-principal;
+  transition: all 0.3s ease;
+  color: $branco;
+  
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+  
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-semi-escuro;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $verde-principal;
+  }
+
+}
+
+.button {
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  padding: 8px 32px; 
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 8px;
+  width: auto;
+  align-self: center;
+  
+  &:hover {
+    background-color: $verde-menos-escuro;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 5px;
+  border-radius: $borda-pouco-arredondada;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.errorText {
+  color: #991b1b;
+  font-size: 12px;
+  display: block;
+}

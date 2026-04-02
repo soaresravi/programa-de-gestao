@@ -28,6 +28,7 @@ const Login = () => {
 
             const response = await api.post('/auth/login', { email, senha });
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
             navigate('/');
         
         } catch (error) {

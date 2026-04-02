@@ -1,4 +1,4 @@
-@import '../../styles/variables';
+@use '../../styles/variables' as *;
 
 .container {
     padding: 20px;
@@ -7,3 +7,17 @@
       color: $preto;
     }
   }
+
+  .logoutButton {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    
+    &:hover {
+      background-color: #b91c1c;
+    }
+  }  

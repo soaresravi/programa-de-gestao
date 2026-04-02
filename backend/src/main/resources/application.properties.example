@@ -32,6 +32,7 @@ mp.jwt.verify.publickey.location=publicKey.pem
 smallrye.jwt.sign.key.location=privateKey.pem
 mp.jwt.verify.issuer=https://programa-de-gestao.com
 smallrye.jwt.new-token.lifespan=28800
+refresh.token.lifespan=604800 
 
 # Swagger
 quarkus.http.auth.permission.swagger.paths=/swagger-ui/*,/q/swagger-ui/*,/q/openapi/*,/openapi/*,/v3/api-docs/*
