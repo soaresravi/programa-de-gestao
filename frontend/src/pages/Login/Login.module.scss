@@ -1,0 +1,170 @@
+@import '../../styles/variables';
+
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('../../assets/image-Photoroom.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px;
+  background: $fundo-padrao;
+  box-shadow: $sombra-card;
+  overflow: hidden;
+  padding: 0 32px 32px 32px;
+}
+
+.cardImage {
+  
+  width: calc(100% + 64px);
+  margin-left: -32px;
+  margin-top: -32px;
+  margin-bottom: 24px;
+  height: 300px;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+}
+
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: $preto;
+  text-align: left;
+  margin-bottom: 24px;
+  font-family: $fonte-principal;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: $branco;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: none;
+  border-radius: $borda-ultra-arredondada-botao;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  background-color: $verde-principal;
+  transition: all 0.3s ease;
+  color: $branco;
+  
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+  
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-semi-escuro;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $verde-principal;
+  }
+
+}
+
+.forgotPassword {
+ 
+    text-align: right;
+    margin-top: -10px;
+  
+  a {
+    
+    font-size: 12px;
+    color: $preto;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+
+  }
+
+}
+
+.button {
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: $verde-menos-escuro;
+  }
+}
+
+.register {
+  
+  text-align: center;
+  font-size: 14px;
+  
+  a {
+    color: $preto;
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+
+  }
+
+  .error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 10px;
+    border-radius: $borda-pouco-arredondada;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+}
