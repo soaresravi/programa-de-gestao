@@ -1,0 +1,298 @@
+@use '../../styles/variables' as *;
+
+.container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('../../assets/image-Photoroom.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+  }
+
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 600px;
+  min-height: 400px;
+  background: $fundo-padrao;
+  padding: 40px 32px;
+  box-shadow: $sombra-card;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-principal;
+  margin-bottom: 10px;
+  font-family: $fonte-principal;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $preto;
+  max-width: 450px;
+  align-self: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 24px;
+  font-family: $fonte-principal;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: $branco;
+}
+
+.input {
+  width: 100%;
+  padding: 8px 12px 8px 40px;
+  border: none;
+  border-radius: $borda-ultra-arredondada-botao;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  background-color: $verde-principal;
+  color: $branco;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.button {
+  width: 100%;
+  max-width: 400px;
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto 20px auto;
+  margin-top: -5px;
+
+  &:hover {
+    background-color: $verde-menos-escuro;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}
+
+.link {
+  
+  font-size: 14px;
+  color: $preto;
+  margin-top: -5px;
+
+  a {
+    
+    color: $preto;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+  }
+
+}
+
+.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 8px;
+  border-radius: $borda-pouco-arredondada;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.success {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 8px;
+  border-radius: $borda-pouco-arredondada;
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.codeContainer {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.subtitleCode {
+  font-size: 14px;
+  color: $preto;
+  max-width: 520px;
+  align-self: center;
+  justify-content: center;
+  margin: auto;
+  margin-bottom: 10px;
+  font-family: $fonte-principal;
+}
+
+.emailCode {
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.codeInput {
+  width: 70px;
+  height: 60px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  border: 1px solid $preto;
+  border-radius: $borda-mais-arredondada;
+  background: transparent;
+  color: $preto;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+
+  &:focus {
+    outline: none;
+    border-color: $verde-semi-escuro;
+  }
+}
+
+.buttonIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.resendLink {
+  
+  font-size: 14px;
+  color: $preto;
+  margin-top: -5px;
+
+  button {
+    background: none;
+    border: none;
+    color: $preto;
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: $verde-principal;
+    }
+
+  }
+
+}
+
+.buttonCode {
+  width: 100%;
+  max-width: 485px;
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  padding: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto 20px auto;
+  margin-top: 5px;
+
+  &:hover {
+    background-color: $verde-menos-escuro;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}
+
+.backButton {
+  
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-semi-escuro;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+}
+
+.eyeButton {
+
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-semi-escuro;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: $verde-escuro-textos;
+  }
+
+}  

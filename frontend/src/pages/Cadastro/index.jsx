@@ -129,9 +129,7 @@ const Cadastro = () => {
                 <input type={showConfirmPassword ? 'text' : 'password'} placeholder="Confirmar senha" className={styles.input}
                 {...register('confirmarSenha', { required: 'Confirme sua senha', validate: value => value === senha || 'As senhas não coincidem' })} />
                   
-                <button type="button" ClassName={styles.eyeButton} onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  {showConfirmPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
-                </button>
+                <button type="button" className={styles.eyeButton} onClick={() => setShowConfirmPassword(!showConfirmPassword)}> {showConfirmPassword ? <EyeClosed size={20} /> : <Eye size={20} />} </button>
 
               </div>
 

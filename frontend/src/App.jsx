@@ -1,8 +1,10 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-const Login = lazy(() => import('./pages/Login'));
-const Cadastro = lazy(() => import('./pages/Cadastro'));
+import Login from './pages/Login';
+import Cadastro from './pages/Cadastro';
+import EsqueciSenha from './pages/EsqueciSenha';
+
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
         <Route path="/cadastro" element={<Cadastro />} /> 
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
       </Routes>  
 
     </Suspense>  
