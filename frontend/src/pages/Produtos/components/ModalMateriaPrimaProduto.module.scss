@@ -1,0 +1,141 @@
+@use '../../../styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  padding: 24px;
+  box-shadow: $sombra-card;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+}
+
+.divider {
+  height: 1px;
+  background-color: $cinza-detalhe;
+  margin: 16px 0;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: $verde-escuro-textos;
+  margin-bottom: 4px;
+}
+
+.inputNome {
+
+  width: 100%;
+  padding: 8px 12px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  font-family: $fonte-principal;
+  color: $preto;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.inputPequeno {
+  
+  width: 50%;
+  padding: 8px 12px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  font-family: $fonte-principal;
+  color: $preto;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.formRow {
+  display: flex;
+  gap: 16px;
+}
+
+.formRow .formGroup {
+  flex: 1;
+}
+
+.infoBox {
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.infoBox p {
+  margin: 4px 0;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.button {
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: $fonte-principal;
+}

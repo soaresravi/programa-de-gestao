@@ -1,0 +1,84 @@
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  min-width: 300px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+  z-index: 1100;
+}
+  
+@keyframes slideIn {
+  
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  } to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+}
+  
+.content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+  
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+  
+.message {
+  flex: 1;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  color: #1e293b;
+}
+  
+.closeButton {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  
+  &:hover {
+    background-color: #f1f5f9;
+    color: #475569;
+  }
+
+}
+  
+.progressBar {
+  height: 3px;
+  transition: width 0.1s linear;
+}
+  
+.success {
+  .icon { color: #22c55e; }
+  .progressBar { background-color: #22c55e; }
+}
+  
+.error {
+  .icon { color: #ef4444; }
+  .progressBar { background-color: #ef4444; }
+}
+  
+.info {
+  .icon { color: #3b82f6; }
+  .progressBar { background-color: #3b82f6; }
+}

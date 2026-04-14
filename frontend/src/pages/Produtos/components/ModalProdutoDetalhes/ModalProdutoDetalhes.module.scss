@@ -1,0 +1,616 @@
+@use '../../../../styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: auto;
+  max-width: 95vw;
+  position: relative;
+}
+
+.columnContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  max-height: 90vh;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 670px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $sombra-card;
+  overflow: hidden;
+}
+
+.modalContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px 24px;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 0 24px;
+  margin-bottom: 0;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.productId {
+  font-size: 14px;
+  font-weight: 400;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.closeButton {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+}
+
+.divider {
+  height: 1px;
+  background-color: $cinza-detalhe;
+  margin: 16px 0;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  margin-bottom: 16px;
+  font-family: $fonte-principal;
+}
+
+.imageContainer {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.imageActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.removeImageBtn {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+  margin-bottom: 10px;
+  font-family: $fonte-principal;
+}
+
+.imagePreview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: $borda-arredondada;
+}
+
+.uploadContainer {
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+  }
+
+}
+
+.uploadHint {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.formRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  min-width: 100px;
+  white-space: nowrap;
+}
+
+.input, .select {
+
+  flex: 1;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+}
+
+.inputDimensao {
+  width: 80px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  text-align: center;
+  color: $preto;
+}
+
+.inputPrice {
+  width: 120px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  text-align: center;
+  color: $preto;
+}
+
+.value {
+  flex: 1;
+  background-color: #e5e5e5;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: $preto;
+}
+
+.valueDimensao {
+  width: 80px;
+  background-color: #e5e5e5;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  text-align: center;
+  color: $preto;
+}
+
+.valuePrice {
+  background-color: #e5e5e5;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: $preto;
+  width: 120px;
+  text-align: center;
+}
+
+.isEditing .input, .isEditing .select, .isEditing .inputDimensao, .isEditing .inputPrice {
+  background-color: $verde-claro;
+}
+
+.viewMateriasBtn {
+
+  background: none;
+  border: none;
+  color: $preto;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-family: $fonte-principal;
+
+  &:hover {
+    color: $verde-titulos;
+  }
+
+}
+
+.custoInfo {
+  margin-top: 16px;
+}
+
+.custoLabel {
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  margin-right: 10px;
+}
+
+.custoValue {
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.itensLabel {
+  color: $preto;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.lucroLabel {
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  margin-right: 10px;
+}
+
+.lucroValue {
+  font-weight: 700;
+  color: $verde-titulos;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.editButton {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 2px solid $verde-principal;
+  color: $verde-principal;
+  border-radius: 20px;
+  padding: 1px 8px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: $fonte-principal;
+
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+
+}
+
+.deleteButton {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #dc2626;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 1px 8px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: $fonte-principal;
+
+  &:hover {
+    background-color: #b91c1c;
+  }
+
+}
+
+.modalMaterias {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 500px;
+  padding: 24px;
+  box-shadow: $sombra-card;
+  animation: fadeInScale 0.2s ease-out;
+}
+
+.modalAddMateria {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 500px;
+  padding: 24px;
+  box-shadow: $sombra-card;
+  z-index: 1002;
+  position: relative;
+  animation: fadeInScale 0.2s ease-out; 
+}
+
+@keyframes fadeInScale {
+  
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  } to {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+.modalTitleMateria {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-titulos;
+  text-align: center;
+  flex: 1;
+}
+
+.materiasList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.materiaPrimaCard {
+ 
+  background-color: $verde-principal;
+  border-radius: 20px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .cardContent {
+    
+    color: $branco;
+    
+    p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+  }
+
+  .cardActions {
+   
+    display: flex;
+    gap: 12px;
+
+    button {
+    
+      background: none;
+      border: none;
+      color: $branco;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+    }
+
+    .deleteBtn {
+      color: $verde-escuro-textos;
+      margin-left: -5px;
+    }
+
+  }
+}
+
+.addMateriaBtn {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  margin: 0 auto 0 auto; 
+  cursor: pointer;
+  width: auto;
+  margin-top: -10px;
+
+  &:hover {
+    background-color: $verde-escuro-textos;
+  }
+
+}
+
+.formGroup {
+
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: $verde-escuro-textos;
+    margin-bottom: 4px;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+}
+
+.disabledInput {
+  background-color: #e5e5e5;
+  color: $cinza-detalhe;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.button {
+
+  background-color: $verde-principal;
+  color: $branco;
+  font-family: $fonte-principal;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
+}
+
+.saveButton {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 1px 8px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: $fonte-principal;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
+}
+
+.valorTotalLabel {
+  font-weight: 700;
+  color: $verde-titulos;
+  font-size: 15px;
+  background-color: rgba($verde-principal, 0.1); 
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.formRowHorizontal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.inputGroupInline {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-size: 13px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    white-space: nowrap;
+    margin-bottom: 0; 
+  }
+
+}
+
+.inputNome {
+  
+  flex: 1; 
+  padding: 5px 16px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  margin-right: 30px;
+  margin-bottom: -10px;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+  
+}
+
+.inputPequeno {
+  width: 60px;
+  font-family: $fonte-principal;
+  padding: 4px 8px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
+}

@@ -7,7 +7,7 @@ import api from '../../services/api';
 import styles from './Login.module.scss';
 import backgroundImage from '../../assets/image-Photoroom.jpg';
 
-const Login = () => {
+const Login = ({ showError }) => {
 
     const navigate = useNavigate(); 
 
@@ -24,6 +24,12 @@ const Login = () => {
         setLoading(true);
         setErro('');
 
+        if (!email || !senha) {
+            setErro('Preencha todos os campos');
+            setLoading(false);
+            return;
+        }
+
         try {
 
             const response = await api.post('/auth/login', { email, senha });
@@ -35,6 +41,7 @@ const Login = () => {
         
             console.error('Erro no login', error);
             setErro('Email ou senha inválidos');
+            if (showError) showError('Email ou senha inválidos');
         
         } finally {
             setLoading(false);

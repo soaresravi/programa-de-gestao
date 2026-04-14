@@ -46,6 +46,5 @@ nb-configuration.xml
 
 # Secrets and credentials
 *.pem
-application.properties
 bfg*.jar
 secrets.txt

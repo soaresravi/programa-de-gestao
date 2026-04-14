@@ -1,0 +1,105 @@
+@use '../../styles/variables' as *;
+
+.sidebar {
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px; 
+  height: 100vh;
+  background-color: $verde-principal;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 12px;
+  z-index: 100;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+
+  &.collapsed {
+    width: 80px;  
+  }
+
+}
+
+.logo {
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  margin-bottom: 40px;
+  color: $branco;
+  
+  span {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+  }
+
+}
+
+.menuButton {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;  
+}
+
+.navItem {
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 12px;
+  background: none;
+  border: none;
+  border-radius: $borda-arredondada;
+  color: $branco;
+  font-size: 15px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: left;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.active {
+    background-color: $verde-semi-escuro;
+    color: $branco;
+  }
+
+}
+
+.sidebar.collapsed .navItem {
+  justify-content: center;
+  padding: 12px;
+  gap: 0;
+}
+
+.sidebar.collapsed .logo {
+  justify-content: center;
+  padding: 0;
+}

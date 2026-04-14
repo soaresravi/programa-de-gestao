@@ -6,7 +6,7 @@ import EtapaCodigo from './EtapaCodigo';
 import EtapaNovaSenha from './EtapaNovaSenha';
 import styles from './EsqueciSenha.module.scss';
 
-const EsqueciSenha = () => {
+const EsqueciSenha = ({ showError, showSuccess }) => {
 
     const [etapa, setEtapa] = useState(1);
     const [email, setEmail] = useState('');
@@ -25,7 +25,7 @@ const EsqueciSenha = () => {
                     {etapa === 1 && (
                         
                         <motion.div key="email" initial={{ x: 0, opacity: 1 }} exit={{ x: -100, opacity: 0 }} transition={{ duration: 0.3 }}>
-                            <EtapaEmail email={email} setEmail={setEmail} avancar={avancar} />
+                            <EtapaEmail email={email} setEmail={setEmail} avancar={avancar} showError={showError} />
                         </motion.div>
 
                     )}
@@ -33,7 +33,7 @@ const EsqueciSenha = () => {
                     {etapa === 2 && (
                         
                         <motion.div key="codigo" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -100, opacity: 0 }} transition={{ duration: 0.3 }}>
-                            <EtapaCodigo email={email} codigo={codigo} setCodigo={setCodigo} avancar={avancar} voltar={voltar} />
+                            <EtapaCodigo email={email} codigo={codigo} setCodigo={setCodigo} avancar={avancar} voltar={voltar} showError={showError} showSuccess={showSuccess} />
                         </motion.div>
 
                     )}
@@ -41,7 +41,7 @@ const EsqueciSenha = () => {
                     {etapa === 3 && (
 
                         <motion.div key="novaSenha" initial={{ x: 100, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.3 }}>
-                            <EtapaNovaSenha email={email} codigo={codigo} voltar={voltar} />
+                            <EtapaNovaSenha email={email} codigo={codigo} voltar={voltar} showError={showError} />
                         </motion.div>
 
                     )}

@@ -1,30 +1,45 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import { SidebarProvider } from './contexts/SidebarContext';
+import { useToast } from './hooks/useToast';
+import ToastContainer from './pages/Produtos/components/Toast/ToastContainer';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha';
 
+const Produtos = lazy(() => import('./pages/Produtos'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 
 function App() {
   
   const isAuthenticated = !!localStorage.getItem('token');
+  const { toasts, removeToast, showSuccess, showError } = useToast();
 
   return (
 
-    <BrowserRouter>
-    <Suspense fallback={<div> Carregando...</div>}>
+    <SidebarProvider>
       
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
-        <Route path="/cadastro" element={<Cadastro />} /> 
-        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
-      </Routes>  
+      <BrowserRouter>
+      <Suspense fallback={<div> Carregando...</div>}>
+        
+        <Routes>
+          
+          <Route path="/login" element={<Login />} />
+          <Route path="/cadastro" element={<Cadastro />} /> 
+          <Route path="/esqueci-senha" element={<EsqueciSenha />} />
 
-    </Suspense>  
-    </BrowserRouter>
+          <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
+          <Route path="/produtos" element={isAuthenticated ? <Produtos /> : <Navigate to="/login" /> } />
+        
+        </Routes>  
+
+      </Suspense>
+
+      <ToastContainer toasts={toasts} onClose={removeToast} />
+
+      </BrowserRouter>
+    </SidebarProvider>
 
   );
 }

@@ -1,0 +1,258 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  margin-bottom: 8px;
+  font-family: $fonte-principal;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.addButton {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-titulos;
+    transform: scale(1.02);
+  }
+
+}
+
+.addButtonMateria {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-semi-escuro;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-titulos;
+    transform: scale(1.02);
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: #a5a5a5;
+  margin: 20px 0;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+
+  background: #B4B4B4;
+  border: none;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+}
+
+.modeloContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid $verde-titulos;
+  border-radius: 5px;
+  background: transparent;
+  overflow: hidden;
+  margin-right: -5px;
+}
+
+.modeloButton {
+
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: $preto;
+  white-space: nowrap;
+  position: relative;
+
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+
+  &.active {
+    background-color: $verde-titulos;
+    color: $branco;
+  }
+
+  &.withDivider {
+    border-left: 2px solid $verde-titulos;
+  }
+
+}
+
+.searchGroup {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.searchInput {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-claro;
+  border-radius: 20px;
+  padding: 8px 16px;
+
+  input {
+
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    width: 200px;
+
+    &::placeholder {
+      color: $verde-escuro-textos;
+    }
+
+  }
+
+}
+
+.ordenarSelect {
+
+  background: $verde-escuro-textos;
+  border: none;
+  border-radius: 15px;
+  padding: 4px 5px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  color: $branco;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+
+}
+
+
+.ordenarGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $preto;
+}
+
+.produtosHeader {
+
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: $verde-titulos;
+    font-family: $fonte-principal;
+  }
+
+  .count {
+    font-size: 14px;
+    color: $preto;
+  }
+  
+}
+
+.produtosContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.grupoContainer {
+  width: 100%;
+}
+
+.grupoTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  margin-bottom: 16px;
+  font-family: $fonte-principal;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}

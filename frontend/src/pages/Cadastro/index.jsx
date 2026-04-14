@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import api from '../../services/api';
 import styles from './Cadastro.module.scss';
 
-const Cadastro = () => {
+const Cadastro = ({ showError, showSuccess }) => {
 
   const navigate = useNavigate();
     
@@ -39,13 +39,19 @@ const Cadastro = () => {
       localStorage.setItem('token', loginResponse.data.token);
       localStorage.setItem('refreshToken', loginResponse.data.refreshToken);
 
+      if (showSuccess) showSuccess('Cadastro realizado com sucesso!');
+
       setTimeout(() => {
         window.location.href = '/';
       }, 100);
 
     } catch (error) {
+      
       console.error('Erro no cadastro:', error);
-      setErro(erro.response?.data || 'Erro ao criar conta');
+      setErro = error.response?.data || 'Erro ao criar conta';
+      setErro(mensagem);
+      if (showError) showError(mensagem);
+
     } finally {
       setLoading(false);
     }

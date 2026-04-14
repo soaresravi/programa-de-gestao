@@ -1,0 +1,117 @@
+@use '../../../styles/variables' as *;
+
+.card {
+
+  background: transparent;
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $sombra-card;
+  }
+
+}
+
+.imageContainer {
+
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+}
+
+.menuButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: $preto;
+  transition: all 0.3s ease;
+}
+
+.menuDropdown {
+
+  position: absolute;
+  top: 45px;
+  right: 8px;
+  background: $branco;
+  border-radius: $borda-pouco-arredondada;
+  box-shadow: $sombra-card;
+  overflow: hidden;
+  z-index: 10;
+
+  button {
+
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $verde-claro;
+    }
+
+    &.delete {
+      color: #dc2626;
+    }
+
+  }
+}
+
+.info {
+  padding: 16px;
+  border-bottom: 2px solid $verde-titulos;  
+  border-left: 2px solid $verde-titulos;     
+  border-right: 2px solid $verde-titulos;   
+  border-top: none;                             
+  border-radius: 0 0 15px 15px;                
+  position: relative;
+}
+
+.nome {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+}
+
+.preco {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-principal;
+  margin-bottom: 30px;
+}
+
+.tipo {
+  display: inline-block;
+  background-color: $verde-principal;
+  color: $preto;
+  font-size: 12px;
+  padding: 4px 20px;
+  border-radius: 7px;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+}

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 import api from '../../services/api';
 import styles from './EsqueciSenha.module.scss';
 
-const EtapaEmail = ({ email, setEmail, avancar }) => {
+const EtapaEmail = ({ email, setEmail, avancar, showError }) => {
 
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
 
@@ -18,11 +15,23 @@ const EtapaEmail = ({ email, setEmail, avancar }) => {
     setLoading(true);
     setErro('');
 
+    if (!email) {
+      setErro('Digite seu email');
+      setLoading(false);
+      return;
+    }
+
     try {
+      
       await api.post('/auth/esqueci-senha', { email });
       avancar();
+  
     } catch (error) {
-      setErro('Erro ao enviar código. Tente novamente.');
+      
+      const mensagem = 'Erro ao enviar código. Tente novamente.';
+      setErro(mensagem);
+      if (showError) showError(mensagem);
+   
     } finally {
       setLoading(false);
     }

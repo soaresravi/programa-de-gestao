@@ -3,12 +3,10 @@ package com.programaGestao.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.programaGestao.enums.Enums.*;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({"materiasPrimas"})
 
 public class Produto extends PanacheEntity {
     

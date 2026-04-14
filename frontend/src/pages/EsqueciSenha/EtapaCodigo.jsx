@@ -1,13 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { LockKeyhole, ArrowLeft } from 'lucide-react';
 
 import styles from './EsqueciSenha.module.scss';
 import api from '../../services/api';
 
-const EtapaCodigo = ({ email, codigo, setCodigo, avancar, voltar }) => {
-
-  const navigate = useNavigate();
+const EtapaCodigo = ({ email, codigo, setCodigo, avancar, voltar, showError, showSuccess }) => {
 
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
@@ -56,10 +53,16 @@ const EtapaCodigo = ({ email, codigo, setCodigo, avancar, voltar }) => {
     }
 
     try {
+     
       await api.post('/auth/verificar-codigo', { email, codigo });
       avancar();
+   
     } catch (error) {
-      setErro('Código inválido ou expirado');
+     
+      const mensagem = 'Código inválido ou expirado';
+      setErro(mensagem);
+      if (showError) showError(mensagem);
+   
     } finally {
       setLoading(false);
     }
@@ -76,11 +79,16 @@ const EtapaCodigo = ({ email, codigo, setCodigo, avancar, voltar }) => {
             
       await api.post('/auth/esqueci-senha', { email });
       setSuccess('Código reenviado! Verifique sua caixa de entrada e spam.');
+      if (showSuccess) showSuccess('Código reenviado! Verifique seu email.');
       setDigitos(['', '', '', '', '', '']);
       inputs.current[0].focus();
         
     } catch (error) {
-      setErro('Erro ao reenviar código');
+     
+      const mensagem = 'Erro ao reenviar código';
+      setErro(mensagem);
+      if (showError) showError(mensagem);
+   
     } finally {
       setReenviando(false);
     }

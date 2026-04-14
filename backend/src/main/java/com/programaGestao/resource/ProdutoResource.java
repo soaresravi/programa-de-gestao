@@ -11,7 +11,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.DefaultValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,23 +50,17 @@ public class ProdutoResource {
             produto.materiasPrimas = new ArrayList<>();
 
             for (MateriaPrimaProdutoDTO mpDTO : dto.materiasPrimas) {
-
-                MateriaPrima materiaPrima = MateriaPrima.findById(mpDTO.materiaPrimaId);
-
-                if (materiaPrima == null) {
-                    return Response.status(Response.Status.BAD_REQUEST).entity("Matéria-prima não encontrada: " + mpDTO.materiaPrimaId).build();
-                }
-
+                
                 MateriaPrimaProduto mp = new MateriaPrimaProduto();
-
+                
                 mp.produto = produto;
-                mp.materiaPrima = materiaPrima;
+                mp.nome = mpDTO.nome;
                 mp.quantidade = mpDTO.quantidade;
                 mp.valorUnitarioNoMomento = mpDTO.valorUnitarioNoMomento;
                 
                 mp.persist();
                 produto.materiasPrimas.add(mp);
-
+                
                 custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
 
             }
@@ -207,24 +200,19 @@ public class ProdutoResource {
             produto.materiasPrimas = new ArrayList<>();
 
             for (MateriaPrimaProdutoDTO mpDTO : dto.materiasPrimas) {
-
-                MateriaPrima materiaPrima = MateriaPrima.findById(mpDTO.materiaPrimaId);
-
-                if (materiaPrima == null) {
-                    return Response.status(Response.Status.BAD_REQUEST).entity("Matéria-prima não encontrada: " + mpDTO.materiaPrimaId).build();
-                }
-
+                
                 MateriaPrimaProduto mp = new MateriaPrimaProduto();
-
+                
                 mp.produto = produto;
-                mp.materiaPrima = materiaPrima;
+                mp.nome = mpDTO.nome;
                 mp.quantidade = mpDTO.quantidade;
                 mp.valorUnitarioNoMomento = mpDTO.valorUnitarioNoMomento;
-
-                mp.persist();;
+                
+                mp.persist();
                 produto.materiasPrimas.add(mp);
+                
                 custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
-            
+                
             }
 
             produto.custoProducao = custoTotal;

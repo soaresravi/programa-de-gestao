@@ -11,10 +11,10 @@ public class MateriaPrimaProduto extends PanacheEntity {
 
     @ManyToOne
     @JsonIgnore
+    
     public Produto produto;
 
-    @ManyToOne
-    public MateriaPrima materiaPrima;
+    public String nome; 
 
     public Integer quantidade;
     public Double valorUnitarioNoMomento;

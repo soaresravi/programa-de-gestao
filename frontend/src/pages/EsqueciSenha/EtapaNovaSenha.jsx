@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './EsqueciSenha.module.scss';
 import api from '../../services/api';
 
-const EtapaNovaSenha = ({ email, codigo, voltar }) => {
+const EtapaNovaSenha = ({ email, codigo, voltar, showError }) => {
 
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -24,21 +24,29 @@ const EtapaNovaSenha = ({ email, codigo, voltar }) => {
 
     if (novaSenha !== confirmarSenha) {
       setErro('As senhas não coincidem');
+      if (showError) showError('As senhas não coincidem');
       setLoading(false);
       return;
     }
 
     if (novaSenha.length < 6) {
       setErro('A senha deve ter no mínimo 6 caracteres');
+      if (showError) showError('A senha deve ter no mínimo 6 caracteres');
       setLoading(false);
       return;
     }
 
     try {
+     
       await api.post('/auth/redefinir-senha', { email, codigo, novaSenha });
       navigate('/login');
+    
     } catch (error) {
-      setErro('Erro ao redefinir senha. Tente novamente.');
+     
+      const mensagem = 'Erro ao redefinir senha. Tente novamente.';
+      setErro(mensagem);
+      if (showError) showError(mensagem);
+  
     } finally {
       setLoading(false);
     }

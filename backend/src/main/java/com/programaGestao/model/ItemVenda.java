@@ -19,6 +19,5 @@ public class ItemVenda extends PanacheEntity {
     public Integer quantidade;
     public Double precoUnitario, custoUnitario;
 
-    public String nomeProdutoManual;
     public Boolean modoManual;
 }

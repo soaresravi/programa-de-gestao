@@ -1,0 +1,581 @@
+@use '../../../../styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalsContainer {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  gap: 20px; 
+  width: auto;
+  max-width: 95vw;
+  position: relative;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  max-width: 670px;
+  width: 100%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $sombra-card;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.modalMaterias {
+  max-width: 580px; 
+}
+
+.modalResumo {
+  max-width: 630px;
+  width: 630px;
+}
+
+.modalMateriaPrima {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 470px; 
+  padding: 20px;
+  box-shadow: $sombra-card;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px 24px;
+  box-sizing: border-box; 
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px 0 24px;
+  margin-bottom: 0;           
+}
+
+.modalHeaderMateria {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.divider {
+  height: 1px;
+  background-color: $cinza-detalhe;
+  margin: 16px 24px;          
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.closeButton {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  margin-bottom: 16px;
+  font-family: $fonte-principal;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.formRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1; 
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  min-width: 80px; 
+  white-space: nowrap;
+}
+
+.input, .select {
+
+  flex: 1;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.inputDimensao {
+  width: 80px;
+  flex: none;
+  text-align: center;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.button {
+
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
+}
+
+.buttonOutline {
+
+  background: transparent;
+  border: 2px solid $verde-principal;
+  color: $preto;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;       
+
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+
+}
+
+.buttonDanger {
+
+  background: transparent;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+  }
+
+}
+
+.imageContainer {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.imagePreview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: $borda-arredondada;
+}
+
+.removeImage {
+
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+
+  &:hover {
+    color: #6f0000;
+  }
+
+}
+
+.materiaPrimaCard {
+
+  background-color: $verde-principal;
+  border-radius: $borda-ultra-arredondada-botao;
+  padding: 14px 10px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .cardContent {
+    
+    color: $branco;
+    
+    p {
+      margin: 4px 0;
+      font-size: 16px;
+    }
+
+  }
+
+  .cardActions {
+ 
+    display: flex;
+    gap: 10px;
+
+    button {
+
+      background: none;
+      border: none;
+      color: $branco;
+      cursor: pointer;
+      font-size: 14px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+    }
+
+    .deleteBtn {
+      color: $verde-escuro-textos;
+    }
+
+  }
+}
+
+.totalInfo {
+
+  text-align: right;
+  margin-top: 16px;
+  
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+  }
+  
+  .custoTotal {
+    font-weight: 700;
+    color: #dc2626;
+    font-size: 18px;
+  }
+
+}
+
+.lucroContainer {
+
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  
+  .lucroField {
+    flex: 1;
+  }
+  
+  .lucroValue {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    color: $verde-principal;
+  }
+  
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.materiasHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.totalInfoLeft {
+
+  text-align: left;
+  margin-top: 16px;
+  
+  p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: $preto; 
+  }
+  
+  .custoTotalText {
+    font-weight: 700;
+    color: $preto; 
+  }
+  
+  .custoTotalValue {
+    font-weight: 700;
+    color: #dc2626;
+  }
+
+}
+
+.lucroRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.lucroItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  margin-top: -15px;
+}
+
+.lucroLabel {
+  font-size: 14px;
+  font-weight: 700;
+  color: $preto;
+  font-family: $fonte-principal;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.lucroInput {
+
+  flex: 1;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  font-weight: 700;
+  color: $preto;
+  max-width: 80px;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+}
+
+.lucroDisplay {
+  flex: 1;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-size: 16px;
+}
+
+.modalTitleMateria {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+  text-align: center;
+  flex: 1;
+  margin: 0;
+  margin-top: -12px;
+}
+
+.closeButtonMateria {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  margin-top: -12px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+}
+
+.dividerMateria {
+  height: 1px;
+  background-color: $cinza-detalhe;
+  margin: 5px 0 20px 0;
+}
+
+.formRowMateria {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.inputGroupMateria {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.labelMateria {
+  font-size: 13px;
+  font-weight: 600;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  white-space: nowrap;
+  min-width: 70px;
+}
+
+.inputMateria {
+
+  flex: 1;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 16px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+  &::placeholder {
+    color: $verde-escuro-textos;
+  }
+
+}
+
+.inputMateriaSmall {
+
+  width: 70px;
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+}
+
+.valorTotalDisplay {
+  font-weight: 700;
+  color: #dc2626; 
+  font-size: 16px;
+  font-family: $fonte-principal;
+  margin-left: 8px;
+}
+
+.buttonGroupMateria {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.buttonMateria {
+
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: -5px;
+
+  &:hover {
+    background-color: $verde-menos-escuro;
+  }
+  
+}
+
+.modalMateriaPrimaEdit {
+  margin-top: 30px; 
+  background-color: #c3c2c2;  
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);  
+  border: 1px solid #c0c0c0;  
+}

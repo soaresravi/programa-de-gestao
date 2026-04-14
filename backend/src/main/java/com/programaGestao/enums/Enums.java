@@ -3,7 +3,7 @@ package com.programaGestao.enums;
 public class Enums {
     
     public enum TipoProduto {
-        BOX_BAU, BASE_BOX, CAMA_CONJUGADA, COLCHAO_ESPUMA, COLCHAO_MOLA, BICAMA
+        BOX_BAU, BASE_BOX, CAMA_CONJUGADA, COLCHAO_ESPUMA, COLCHAO_MOLA, BICAMA, MATERIA_PRIMA
     }
 
     public enum ModeloBauBaseColchao {
