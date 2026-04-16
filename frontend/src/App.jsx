@@ -7,6 +7,7 @@ import ToastContainer from './pages/Produtos/components/Toast/ToastContainer';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha';
+import Vendas from './pages/Vendas';
 
 const Produtos = lazy(() => import('./pages/Produtos'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -31,6 +32,7 @@ function App() {
 
           <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
           <Route path="/produtos" element={isAuthenticated ? <Produtos /> : <Navigate to="/login" /> } />
+          <Route path="/vendas" element={isAuthenticated ? <Vendas /> : <Navigate to="/login" />} />
         
         </Routes>  
 

@@ -1,0 +1,134 @@
+@use '../../styles/variables' as *;
+
+.calendarioContainer {
+  background-color: $branco;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: $sombra-card;
+  width: 320px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.calendarioHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.mesButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-titulos;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+}
+
+.mesTitulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  text-transform: capitalize;
+}
+
+.diasSemana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 8px;
+}
+
+.diaSemana {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: $cinza-detalhe;
+  font-family: $fonte-principal;
+  padding: 8px 0;
+}
+
+.diasGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0; /* SEM GAP - para ficar contínuo */
+}
+
+.diaButton {
+  aspect-ratio: 1;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: $preto;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  
+  &:hover {
+    background-color: rgba($verde-principal, 0.15);
+    border-radius: 50%;
+  }
+  
+  &.otherMonth {
+    color: $cinza-detalhe;
+  }
+  
+  /* Dias dentro do intervalo */
+  &.inRange {
+    background-color: rgba($verde-principal, 0.25);
+    border-radius: 0;
+  }
+  
+  /* Data INICIAL - círculo completo */
+  &.startDate {
+    background-color: $verde-principal;
+    color: $branco;
+    border-radius: 50% !important;
+  }
+  
+  /* Data FINAL - círculo completo */
+  &.endDate {
+    background-color: $verde-principal;
+    color: $branco;
+    border-radius: 50% !important;
+  }
+  
+  /* Remove o fundo do intervalo no dia inicial/final */
+  &.inRange.startDate,
+  &.inRange.endDate {
+    background-color: $verde-principal;
+  }
+  
+  /* Quando é SÓ UM DIA */
+  &.startDate.endDate {
+    border-radius: 50% !important;
+    background-color: $verde-principal;
+  }
+}

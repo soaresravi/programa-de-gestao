@@ -1,0 +1,427 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+.headerTop {
+  background-color: $verde-titulos;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  transition: margin-left 0.3s ease;
+  z-index: 5;
+}
+
+.headerTopContent {
+  padding: 12px 32px;
+  display: flex;
+  justify-content: flex-end;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.atalhos {
+  display: flex;
+  gap: 24px;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+  margin-top: 45px; /* altura do header + espaço */
+}
+
+.atalhoLink {
+  color: $branco;
+  font-weight: 700;
+  font-size: 16px;
+  font-family: $fonte-principal;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.novaVendaBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 12px;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+    transform: scale(1.02);
+  }
+}
+
+/* Tabela container */
+.tabelaContainer {
+  background-color: $verde-principal;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  width: fit-content;
+  min-width: 80%;
+  max-width: 100%;
+}
+
+.tabelaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap; /* ADICIONA - para quebrar se necessário */
+  gap: 16px;
+}
+
+.tabelaTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-claro;
+  border-radius: 20px;
+  padding: 8px 16px;
+  
+  input {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    width: 200px;
+    
+    &::placeholder {
+      color: $verde-escuro-textos;
+    }
+  }
+}
+
+/* Filtros */
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.filtrosEsquerda {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filtroData {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $branco;
+  border-radius: 5px;
+  padding: 6px;
+  min-width: 160px;
+  
+  select {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    cursor: pointer;
+    min-width: 130px;
+    
+    option {
+      background-color: $branco;
+      color: $preto;
+    }
+  }
+}
+
+.filtroSelect {
+  background-color: $branco;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 5px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+.modeloContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid $verde-titulos;
+  border-radius: 5px;
+  background: $branco;
+  overflow: hidden;
+}
+
+.modeloButton {
+  background: $branco;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: $preto;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+
+  &.active {
+    background-color: $verde-titulos;
+    color: $branco;
+  }
+
+  &.withDivider {
+    border-left: 2px solid $verde-titulos;
+  }
+}
+
+.limparBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $branco;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Tabela */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: auto;
+  border-collapse: collapse;
+  table-layout: auto;
+  
+  th {
+    text-align: left;
+    color: $verde-escuro-textos;
+    font-weight: 700;
+    font-size: 18px;
+    font-family: $fonte-principal;
+    border-bottom: 1px solid rgba($branco, 0.3);
+    white-space: nowrap;
+    padding: 12px 24px;
+  }
+  
+  td {
+    padding: 12px 24px;
+    color: $branco;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    border-bottom: 1px solid rgba($branco, 0.2);
+    white-space: nowrap;
+  }
+}
+
+.table th:nth-child(1), .table td:nth-child(1) { width: auto; }  /* Data */
+.table th:nth-child(2), .table td:nth-child(2) { width: auto; } /* Produto */
+.table th:nth-child(3), .table td:nth-child(3) { width: auto; } /* Comprador */
+.table th:nth-child(4), .table td:nth-child(4) { width: auto; } /* Vendedor */
+.table th:nth-child(5), .table td:nth-child(5) { width: auto; }  /* Quantidade */
+.table th:nth-child(6), .table td:nth-child(6) { width: auto; } /* Total */
+
+
+.produtoLink {
+  text-decoration: underline;
+  cursor: pointer;
+  
+  &:hover {
+    color: $verde-escuro-textos;
+  }
+}
+
+.totalCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menuCellBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $branco;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  
+  &:hover {
+    color: $verde-escuro-textos;
+  }
+}
+
+/* Footer da tabela */
+.tableFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.totalLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $verde-escuro-textos;
+  font-weight: 700;
+  font-size: 16px;
+  position: absolute;
+  font-family: $fonte-principal;
+  left: 0;
+  
+  strong {
+    font-size: 18px;
+  }
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* espaço entre os elementos */
+}
+
+.pageBtn {
+  background: transparent;
+  border: 2px solid $branco;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 4px;
+  min-width: 8px;
+  min-height: 8px;
+  color: $branco;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba($branco, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.pageInfo {
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $branco; /* texto branco */
+  background: transparent;
+}
+/* Botão Exportar PDF */
+.exportBtnContainer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.exportBtn {
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 12px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+    transform: scale(1.02);
+  }
+}
+
+.calendarioWrapper {
+  position: relative;
+}
+
+.calendarioTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $branco;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  min-width: 220px;
+  justify-content: space-between;
+  
+  span {
+    font-size: 14px;
+    font-family: $fonte-principal;
+    color: $preto;
+    flex: 1;
+  }
+}
+
+.calendarioDropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  z-index: 100;
+}

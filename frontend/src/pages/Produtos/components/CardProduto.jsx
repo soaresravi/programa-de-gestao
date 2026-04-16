@@ -21,15 +21,13 @@ const formatarTipo = (tipo) => {
 
 const CardProduto = ({ produto, onClick }) => {
 
-  const [menuAberto, setMenuAberto] = useState(false);
-
   return (
   
   <div className={styles.card} onClick={onClick}>
 
     <div className={styles.imageContainer}>
       <img style={{ borderBottomLeftRadius: '15px'}} src={produto.fotoURL || 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Item_sem_imagem.svg/1280px-Item_sem_imagem.svg.png'} alt={produto.nome} />
-      <button className={styles.menuButton} onClick={(e) => { e.stopPropagation(); setMenuAberto(!menuAberto);}}> <Ellipsis size={18} /> </button>
+      <button className={styles.menuButton} onClick={(e) => { e.stopPropagation(); onClick(); }}> <Ellipsis size={18} /> </button>
     </div>
         
     <div className={styles.info}>
