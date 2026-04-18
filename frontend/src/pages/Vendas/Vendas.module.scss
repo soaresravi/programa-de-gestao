@@ -5,6 +5,7 @@
   min-height: 100vh;
   background-color: $fundo-padrao;
 }
+
 .headerTop {
   background-color: $verde-titulos;
   position: fixed;
@@ -34,10 +35,11 @@
   padding: 24px 32px;
   transition: margin-left 0.3s ease;
   overflow-x: hidden;
-  margin-top: 45px; /* altura do header + espaço */
+  margin-top: 45px; 
 }
 
 .atalhoLink {
+
   color: $branco;
   font-weight: 700;
   font-size: 16px;
@@ -47,6 +49,7 @@
   &:hover {
     text-decoration: underline;
   }
+
 }
 
 .header {
@@ -70,6 +73,7 @@
 }
 
 .novaVendaBtn {
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -77,8 +81,8 @@
   color: $branco;
   border: none;
   border-radius: 50px;
-  padding: 8px 12px;
-  font-size: 18px;
+  padding: 8px 20px;
+  font-size: 16px;
   font-weight: 700;
   font-family: $fonte-principal;
   cursor: pointer;
@@ -88,9 +92,9 @@
     background-color: $verde-semi-escuro;
     transform: scale(1.02);
   }
+
 }
 
-/* Tabela container */
 .tabelaContainer {
   background-color: $verde-principal;
   border-radius: 20px;
@@ -106,7 +110,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-  flex-wrap: wrap; /* ADICIONA - para quebrar se necessário */
+  flex-wrap: wrap; 
   gap: 16px;
 }
 
@@ -118,6 +122,7 @@
 }
 
 .searchBox {
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -126,6 +131,7 @@
   padding: 8px 16px;
   
   input {
+
     background: none;
     border: none;
     outline: none;
@@ -136,10 +142,11 @@
     &::placeholder {
       color: $verde-escuro-textos;
     }
+
   }
+
 }
 
-/* Filtros */
 .filtros {
   display: flex;
   justify-content: space-between;
@@ -157,6 +164,7 @@
 }
 
 .filtroData {
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -166,6 +174,7 @@
   min-width: 160px;
   
   select {
+
     background: transparent;
     border: none;
     outline: none;
@@ -178,10 +187,13 @@
       background-color: $branco;
       color: $preto;
     }
+
   }
+
 }
 
 .filtroSelect {
+
   background-color: $branco;
   border: none;
   border-radius: 5px;
@@ -193,6 +205,7 @@
   &:focus {
     outline: none;
   }
+
 }
 
 .modeloContainer {
@@ -205,6 +218,7 @@
 }
 
 .modeloButton {
+
   background: $branco;
   border: none;
   padding: 6px 10px;
@@ -227,6 +241,7 @@
   &.withDivider {
     border-left: 2px solid $verde-titulos;
   }
+
 }
 
 .limparBtn {
@@ -243,12 +258,12 @@
   transition: all 0.3s ease;
 }
 
-/* Tabela */
 .tableWrapper {
   overflow-x: auto;
 }
 
 .table {
+
   width: auto;
   border-collapse: collapse;
   table-layout: auto;
@@ -272,23 +287,26 @@
     border-bottom: 1px solid rgba($branco, 0.2);
     white-space: nowrap;
   }
+
 }
 
-.table th:nth-child(1), .table td:nth-child(1) { width: auto; }  /* Data */
-.table th:nth-child(2), .table td:nth-child(2) { width: auto; } /* Produto */
-.table th:nth-child(3), .table td:nth-child(3) { width: auto; } /* Comprador */
-.table th:nth-child(4), .table td:nth-child(4) { width: auto; } /* Vendedor */
-.table th:nth-child(5), .table td:nth-child(5) { width: auto; }  /* Quantidade */
-.table th:nth-child(6), .table td:nth-child(6) { width: auto; } /* Total */
+.table th:nth-child(1), .table td:nth-child(1) { width: auto; }
+.table th:nth-child(2), .table td:nth-child(2) { width: auto; } 
+.table th:nth-child(3), .table td:nth-child(3) { width: auto; }
+.table th:nth-child(4), .table td:nth-child(4) { width: auto; }
+.table th:nth-child(5), .table td:nth-child(5) { width: auto; } 
+.table th:nth-child(6), .table td:nth-child(6) { width: auto; } 
 
 
 .produtoLink {
+
   text-decoration: underline;
   cursor: pointer;
   
   &:hover {
     color: $verde-escuro-textos;
   }
+
 }
 
 .totalCell {
@@ -298,6 +316,7 @@
 }
 
 .menuCellBtn {
+
   background: none;
   border: none;
   cursor: pointer;
@@ -310,9 +329,10 @@
   &:hover {
     color: $verde-escuro-textos;
   }
+
 }
 
-/* Footer da tabela */
+
 .tableFooter {
   display: flex;
   justify-content: center;
@@ -322,6 +342,7 @@
 }
 
 .totalLabel {
+
   display: flex;
   align-items: center;
   gap: 8px;
@@ -335,14 +356,16 @@
   strong {
     font-size: 18px;
   }
+
 }
 .pagination {
   display: flex;
   align-items: center;
-  gap: 8px; /* espaço entre os elementos */
+  gap: 8px; 
 }
 
 .pageBtn {
+
   background: transparent;
   border: 2px solid $branco;
   border-radius: 8px;
@@ -364,26 +387,29 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+
 }
 
 .pageInfo {
   font-size: 14px;
   font-family: $fonte-principal;
-  color: $branco; /* texto branco */
+  color: $branco;
   background: transparent;
 }
-/* Botão Exportar PDF */
-.exportBtnContainer {
+
+.headerButtons {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
 }
 
 .exportBtn {
+
   background-color: $verde-principal;
   color: $branco;
   border: none;
   border-radius: 50px;
-  padding: 6px 12px;
+  padding: 6px 16px;
   font-size: 16px;
   font-weight: 700;
   font-family: $fonte-principal;
@@ -391,9 +417,10 @@
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: $verde-semi-escuro;
+    background-color: rgba($verde-escuro-textos, 0.1);
     transform: scale(1.02);
   }
+
 }
 
 .calendarioWrapper {
@@ -401,6 +428,7 @@
 }
 
 .calendarioTrigger {
+  
   display: flex;
   align-items: center;
   gap: 8px;
@@ -417,6 +445,7 @@
     color: $preto;
     flex: 1;
   }
+
 }
 
 .calendarioDropdown {

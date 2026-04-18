@@ -10,391 +10,371 @@ import styles from './Vendas.module.scss';
 
 const Vendas = () => {
 
-    const [search, setSearch] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [dataFim, setDataFim] = useState('');
-    const [tipoProduto, setTipoProduto] = useState('');
-    const [clienteFinal, setClienteFinal] = useState(null);
-    const [vendedor, setVendedor] = useState('');
-    const [page, setPage] = useState(0);
-    const [pageSize] = useState(10);
-    const [periodoPreset, setPeriodoPreset] = useState('mes');
-    const [dataPersonalizadaInicio, setDataPersonalizadaInicio] = useState('');
-    const [dataPersonalizadaFim, setDataPersonalizadaFim] = useState('');
-    const [mostrarCalendario, setMostrarCalendario] = useState(false);
-    const [vendedoresOriginal, setVendedoresOriginal] = useState([]);
-    const calendarioRef = useRef(null);
+  const [search, setSearch] = useState('');
+  const [dataInicio, setDataInicio] = useState('');
+  const [dataFim, setDataFim] = useState('');
+  const [tipoProduto, setTipoProduto] = useState('');
+  const [clienteFinal, setClienteFinal] = useState(null);
+  const [vendedor, setVendedor] = useState('');
+  const [page, setPage] = useState(0);
+  const [pageSize] = useState(10);
+  const [periodoPreset, setPeriodoPreset] = useState('mes');
+  const [dataPersonalizadaInicio, setDataPersonalizadaInicio] = useState('');
+  const [dataPersonalizadaFim, setDataPersonalizadaFim] = useState('');
+  const [mostrarCalendario, setMostrarCalendario] = useState(false);
+  const [vendedoresOriginal, setVendedoresOriginal] = useState([]);
+  const calendarioRef = useRef(null);
 
-    const { isExpanded } = useSidebar();
+  const { isExpanded } = useSidebar();
 
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-          if (calendarioRef.current && !calendarioRef.current.contains(event.target)) {
-              setMostrarCalendario(false);
-          }
-      };
-  
-      if (mostrarCalendario) {
-          document.addEventListener('mousedown', handleClickOutside);
+  useEffect(() => {
+    
+    const handleClickOutside = (event) => {
+    
+      if (calendarioRef.current && !calendarioRef.current.contains(event.target)) {
+        setMostrarCalendario(false);
       }
+
+    };
   
-      return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-      };
+    if (mostrarCalendario) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+  
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+
   }, [mostrarCalendario]);
 
-    useEffect(() => {
+  useEffect(() => {
        
-        if (periodoPreset !== 'personalizado') {
-          setMostrarCalendario(false);
-        }
+    if (periodoPreset !== 'personalizado') {
+      setMostrarCalendario(false);
+    }
 
-    }, [periodoPreset]);
+  }, [periodoPreset]);
 
-    useEffect(() => {
+  useEffect(() => {
 
-        const hoje = new Date();
-        const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-        const primeiroDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
-        const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
-        const primeiroDiaAno = new Date(hoje.getFullYear(), 0, 1);
+    const hoje = new Date();
+    const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const primeiroDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
+    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
+    const primeiroDiaAno = new Date(hoje.getFullYear(), 0, 1);
 
-        const formatarData = (date) => date.toISOString().split('T')[0];
+    const formatarData = (date) => date.toISOString().split('T')[0];
 
-        if (periodoPreset !== 'personalizado') {
+    if (periodoPreset !== 'personalizado') {
             
-            switch (periodoPreset) {
+      switch (periodoPreset) {
 
-                case 'mes':
-                    setDataInicio(formatarData(primeiroDiaMes));
-                    setDataFim(formatarData(hoje));
-                    break;
+        case 'mes':
+          setDataInicio(formatarData(primeiroDiaMes));
+          setDataFim(formatarData(hoje));
+          break;
                 
-                case 'ultimos30':      
-                    const trintaDiasAtras = new Date(hoje);
-                    trintaDiasAtras.setDate(hoje.getDate() - 30);
-                    setDataInicio(formatarData(trintaDiasAtras));
-                    setDataFim(formatarData(hoje));
-                    break;
+        case 'ultimos30':      
+          const trintaDiasAtras = new Date(hoje);
+          trintaDiasAtras.setDate(hoje.getDate() - 30);
+          setDataInicio(formatarData(trintaDiasAtras));
+          setDataFim(formatarData(hoje));
+          break;
                 
-                case 'mesAnterior':
-                    setDataInicio(formatarData(primeiroDiaMesAnterior));
-                    setDataFim(formatarData(ultimoDiaMesAnterior));
-                    break;
+        case 'mesAnterior':
+          setDataInicio(formatarData(primeiroDiaMesAnterior));
+          setDataFim(formatarData(ultimoDiaMesAnterior));
+          break;
                 
-                case 'ano':
-                    setDataInicio(formatarData(primeiroDiaAno));
-                    setDataFim(formatarData(hoje));
-                    break;
+        case 'ano':
+          setDataInicio(formatarData(primeiroDiaAno));
+          setDataFim(formatarData(hoje));
+          break;
                 
-                default:
-                    break;
-            }
+        default:
+          break;
 
-        } else {
+      }
+
+    } else {
             
-            if (dataPersonalizadaInicio && dataPersonalizadaFim) {
-                setDataInicio(dataPersonalizadaInicio);
-                setDataFim(dataPersonalizadaFim);
-            }
-        }
+      if (dataPersonalizadaInicio && dataPersonalizadaFim) {
+        setDataInicio(dataPersonalizadaInicio);
+        setDataFim(dataPersonalizadaFim);
+      }
 
-    }, [periodoPreset, dataPersonalizadaInicio, dataPersonalizadaFim]);
+    }
 
-    const { data: vendas, refetch, isLoading } = useQuery({
+  }, [periodoPreset, dataPersonalizadaInicio, dataPersonalizadaFim]);
+
+  const { data: vendas, refetch, isLoading } = useQuery({
         
-        queryKey: ['vendas', page, pageSize, dataInicio, dataFim, tipoProduto, clienteFinal, vendedor, search],
+    queryKey: ['vendas', page, pageSize, dataInicio, dataFim, tipoProduto, clienteFinal, vendedor, search],
+    
+    queryFn: async () => {
 
-        queryFn: async () => {
+      const params = new URLSearchParams();
 
-            const params = new URLSearchParams();
+      if (dataInicio) params.append('dataInicio', dataInicio);
+      if (dataFim) params.append('dataFim', dataFim);
+      if (tipoProduto) params.append('tipoProduto', tipoProduto);
+      if (clienteFinal !== null) params.append('clienteFinal', clienteFinal);
+      if (vendedor) params.append('vendedor', vendedor);
+      if (search) params.append('search', search);
 
-            if (dataInicio) params.append('dataInicio', dataInicio);
-            if (dataFim) params.append('dataFim', dataFim);
-            if (tipoProduto) params.append('tipoProduto', tipoProduto);
-            if (clienteFinal !== null) params.append('clienteFinal', clienteFinal);
-            if (vendedor) params.append('vendedor', vendedor);
-            if (search) params.append('search', search);
+      params.append('page', page);
+      params.append('size', pageSize);
 
-            params.append('page', page);
-            params.append('size', pageSize);
+      const response = await api.get(`/vendas?${params.toString()}`);
+      return response.data;
 
-            const response = await api.get(`/vendas?${params.toString()}`);
-            return response.data;
+    },
 
-        },
+  });
 
-    });
-
-    useEffect(() => {
+  useEffect(() => {
         
-        if (vendas && vendedoresOriginal.length === 0) {
-          const vendedoresUnicos = [...new Set(vendas.map(v => v.vendedor).filter(Boolean))];
-          setVendedoresOriginal(vendedoresUnicos);
-        }
+    if (vendas && vendedoresOriginal.length === 0) {
+      const vendedoresUnicos = [...new Set(vendas.map(v => v.vendedor).filter(Boolean))];
+      setVendedoresOriginal(vendedoresUnicos);
+    }
 
-    }, [vendas]);
+  }, [vendas]);
 
-    const tiposProduto = [
-        { value: '', label: 'Selecionar tipo de produto' },
-        { value: 'CAMA_CONJUGADA', label: 'Cama' },
-        { value: 'BICAMA', label: 'Bicama' },
-        { value: 'BASE_BOX', label: 'Base' },
-        { value: 'BOX_BAU', label: 'Baú' },
-        { value: 'COLCHAO_MOLA', label: 'Colchão de mola' },
-        { value: 'COLCHAO_ESPUMA', label: 'Colchão de espuma' },
-        { value: 'MATERIA_PRIMA', label: 'Matéria-prima' },
-    ];
+  const tiposProduto = [
+    { value: '', label: 'Selecionar tipo de produto' },
+    { value: 'CAMA_CONJUGADA', label: 'Cama' },
+    { value: 'BICAMA', label: 'Bicama' },
+    { value: 'BASE_BOX', label: 'Base' },
+    { value: 'BOX_BAU', label: 'Baú' },
+    { value: 'COLCHAO_MOLA', label: 'Colchão de mola' },
+    { value: 'COLCHAO_ESPUMA', label: 'Colchão de espuma' },
+    { value: 'MATERIA_PRIMA', label: 'Matéria-prima' },
+  ];
+  
+  const vendedores = [
+    { value: '', label: 'Selecionar vendedor' }, ...vendedoresOriginal.map(v => ({ value: v, label: v }))
+  ];
 
-const vendedores = [
-  { value: '', label: 'Selecionar vendedor' },
-  ...vendedoresOriginal.map(v => ({ value: v, label: v }))
-];
+  const limparFiltros = () => {
+    setPeriodoPreset('mes');
+    setTipoProduto('');
+    setClienteFinal(null);
+    setVendedor('');
+    setSearch('');
+    setPage(0);
+    setDataPersonalizadaInicio('');
+    setDataPersonalizadaFim('');
+  };
 
-    const limparFiltros = () => {
-        setPeriodoPreset('mes');
-        setTipoProduto('');
-        setClienteFinal(null);
-        setVendedor('');
-        setSearch('');
-        setPage(0);
-        setDataPersonalizadaInicio('');
-        setDataPersonalizadaFim('');
-    };
+  const limparDatasPersonalizadas = () => {
+    setDataPersonalizadaInicio('');
+    setDataPersonalizadaFim('');
+    setPeriodoPreset('mes');
+  };
 
-    const limparDatasPersonalizadas = () => {
-      setDataPersonalizadaInicio('');
-      setDataPersonalizadaFim('');
-      setPeriodoPreset('mes');
-    };
+  const totalVendas = vendas?.reduce((acc, v) => acc + (v.valorTotal || 0), 0) || 0;
 
-    const totalVendas = vendas?.reduce((acc, v) => acc + (v.valorTotal || 0), 0) || 0;
-
-    return (
-      <div className={styles.container}>
-        <Sidebar />
+  return (
+  
+  <div className={styles.container}>
         
-        <div className={styles.headerTop} style={{ marginLeft: isExpanded ? '250px' : '70px' }}>
-        <div className={styles.headerTopContent}>
+    <Sidebar />
+        
+    <div className={styles.headerTop} style={{ marginLeft: isExpanded ? '250px' : '70px' }}>
+      <div className={styles.headerTopContent}>
+          
           <div className={styles.atalhos}>
             <a href="/produtos" className={styles.atalhoLink}>Catálogo de produtos</a>
             <a href="/cidades" className={styles.atalhoLink}>Cidades/frete</a>
             <a href="/lojistas" className={styles.atalhoLink}>Lojistas</a>
           </div>
+
+      </div>
+    </div>
+      
+    <div className={styles.content} style={{ marginLeft: isExpanded ? '250px' : '70px'}}>
+      
+      <div className={styles.header}>
+       
+        <div>
+          <h1 className={styles.title}>Olá, David!</h1>
+          <p className={styles.subtitle}>Acompanhe o relatório completo das suas vendas.</p>
         </div>
+
+        <div className={styles.headerButtons}>
+          <button className={styles.exportBtn}> Exportar para PDF </button>
+          <button className={styles.novaVendaBtn}> <Plus size={20} strokeWidth={4} /> Nova venda </button>
+        </div>
+        
       </div>
       
-        <div className={styles.content} style={{ marginLeft: isExpanded ? '250px' : '70px'}}>
-          <div className={styles.header}>
-            <div>
-              <h1 className={styles.title}>Olá, David!</h1>
-              <p className={styles.subtitle}>Acompanhe o relatório completo das suas vendas.</p>
-            </div>
-            <button className={styles.novaVendaBtn}> <Plus size={20} strokeWidth={4} /> Nova venda </button>
+      <div className={styles.tabelaContainer}>
+        
+        <div className={styles.tabelaHeader}>
+          
+          <h2 className={styles.tabelaTitle}>Vendas</h2>
+          
+          <div className={styles.searchBox}>
+            <Search size={18} strokeWidth={2.5} />
+            <input type="text" placeholder="Pesquisar vendas..." value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
+
+        </div>
   
-          {/* Tabela de vendas */}
-          <div className={styles.tabelaContainer}>
-            <div className={styles.tabelaHeader}>
-              <h2 className={styles.tabelaTitle}>Vendas</h2>
-              <div className={styles.searchBox}>
-                <Search size={18} strokeWidth={2.5} />
-                <input
-                  type="text"
-                  placeholder="Pesquisar vendas..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-  
-            {/* Filtros */}
-            <div className={styles.filtros}>
-              <div className={styles.filtrosEsquerda}>
-                <select 
-                  className={styles.filtroSelect}  style={{ backgroundColor: '#FFF', borderRadius: 0, padding: '6px'}}
-                  value={tipoProduto} 
-                  onChange={(e) => setTipoProduto(e.target.value)}
-                >
-                  {tiposProduto.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
+        <div className={styles.filtros}>
+          <div className={styles.filtrosEsquerda}>
+            
+            <select className={styles.filtroSelect}  style={{ backgroundColor: '#FFF', borderRadius: 0, padding: '6px'}} value={tipoProduto} onChange={(e) => setTipoProduto(e.target.value)}>
+              
+              {tiposProduto.map(t => (
+                <option key={t.value} value={t.value}>{t.label}</option>
+              ))}
+
+            </select>
+            
+            {periodoPreset !== 'personalizado' ? (
+            
+              <div className={styles.filtroData}>
+             
+                <Calendar size={18} strokeWidth={2.5} color='#02323C' />
+             
+                <select className={styles.filtroSelect} style={{ padding: '0 0' }} value={periodoPreset} onChange={(e) => setPeriodoPreset(e.target.value)}>
+                  <option value="mes">Este mês</option>
+                  <option value="ultimos30">Últimos 30 dias</option>
+                  <option value="mesAnterior">Mês anterior</option>
+                  <option value="ano">Este ano</option>
+                  <option value="personalizado">Personalizado</option>
                 </select>
-                {periodoPreset !== 'personalizado' ? (
-                  <div className={styles.filtroData}>
-                    <Calendar size={18} strokeWidth={2.5} color='#02323C' />
-                    <select  className={styles.filtroSelect} style={{ padding: '0 0' }} value={periodoPreset} onChange={(e) => setPeriodoPreset(e.target.value)}>
-                      <option value="mes">Este mês</option>
-                      <option value="ultimos30">Últimos 30 dias</option>
-                      <option value="mesAnterior">Mês anterior</option>
-                      <option value="ano">Este ano</option>
-                      <option value="personalizado">Personalizado</option>
-                    </select>
-                  </div>
-                ) : (
-                  /* Se for personalizado, mostra o calendário no lugar */
-                  <div className={styles.calendarioWrapper} ref={calendarioRef}>
-                    <div className={styles.calendarioTrigger} onClick={() => setMostrarCalendario(!mostrarCalendario)}>
-                      <Calendar size={18} strokeWidth={2.5} />
-                      <span>
-                        {dataPersonalizadaInicio && dataPersonalizadaFim 
-                          ? `${new Date(dataPersonalizadaInicio).toLocaleDateString('pt-BR')} - ${new Date(dataPersonalizadaFim).toLocaleDateString('pt-BR')}`
-                          : 'Selecione as datas'}
-                      </span>
-                      {(dataPersonalizadaInicio || dataPersonalizadaFim) && (
-                        <X 
-                          size={14} 
-                          strokeWidth={2.5} 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            limparDatasPersonalizadas();
-                          }}
-                          style={{ cursor: 'pointer', marginLeft: '4px' }}
-                        />
-                      )}
-                    </div>
+            
+              </div>
+          
+            ) : (
+            
+              <div className={styles.calendarioWrapper} ref={calendarioRef}>
+                <div className={styles.calendarioTrigger} onClick={() => setMostrarCalendario(!mostrarCalendario)}>
+                
+                  <Calendar size={18} strokeWidth={2.5} />
+                  <span> {dataPersonalizadaInicio && dataPersonalizadaFim ? `${new Date(dataPersonalizadaInicio).toLocaleDateString('pt-BR')} - ${new Date(dataPersonalizadaFim).toLocaleDateString('pt-BR')}` : 'Selecione as datas'} </span>
+                
+                  {(dataPersonalizadaInicio || dataPersonalizadaFim) && (
+                 
+                    <X size={14} strokeWidth={2.5}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      limparDatasPersonalizadas();
+                    }} style={{ cursor: 'pointer', marginLeft: '4px' }} />
+                
+                  )}
+
+                </div>
                     
-                    {mostrarCalendario && (
-                      <div className={styles.calendarioDropdown}>
-                        <Calendario
-                          dataInicio={dataPersonalizadaInicio}
-                          dataFim={dataPersonalizadaFim}
-                          onSelect={(inicio, fim) => {
-                            setDataPersonalizadaInicio(inicio.toISOString().split('T')[0]);
-                            setDataPersonalizadaFim(fim.toISOString().split('T')[0]);
-                          }}
-                          onClose={() => setMostrarCalendario(false)}
-                        />
-                      </div>
-                    )}
+                {mostrarCalendario && (
+                
+                  <div className={styles.calendarioDropdown}>
+                 
+                    <Calendario dataInicio={dataPersonalizadaInicio} dataFim={dataPersonalizadaFim}
+                    onSelect={(inicio, fim) => {
+                      setDataPersonalizadaInicio(inicio.toISOString().split('T')[0]);
+                      setDataPersonalizadaFim(fim.toISOString().split('T')[0]);
+                    }} onClose={() => setMostrarCalendario(false)} />
+
                   </div>
                 )}
-                {/* Cliente | Lojista */}
-<div className={styles.modeloContainer}>
-  <button 
-    className={`${styles.modeloButton} ${clienteFinal === null ? styles.active : ''}`}
-    onClick={() => setClienteFinal(null)}
-  >
-    Todos
-  </button>
-  <button 
-    className={`${styles.modeloButton} ${clienteFinal === true ? styles.active : ''} ${styles.withDivider}`}
-    onClick={() => setClienteFinal(true)}
-  >
-    Cliente
-  </button>
-  <button 
-    className={`${styles.modeloButton} ${clienteFinal === false ? styles.active : ''} ${styles.withDivider}`}
-    onClick={() => setClienteFinal(false)}
-  >
-    Lojista
-  </button>
-</div>
+              </div>
+            )}
+          
+            <div className={styles.modeloContainer}>
+              <button className={`${styles.modeloButton} ${clienteFinal === null ? styles.active : ''}`} onClick={() => setClienteFinal(null)}> Todos </button>
+              <button className={`${styles.modeloButton} ${clienteFinal === true ? styles.active : ''} ${styles.withDivider}`} onClick={() => setClienteFinal(true)}> Cliente </button>
+              <button className={`${styles.modeloButton} ${clienteFinal === false ? styles.active : ''} ${styles.withDivider}`} onClick={() => setClienteFinal(false)}> Lojista </button>
+            </div>
+          
+            <select className={styles.filtroSelect} value={vendedor}  onChange={(e) => setVendedor(e.target.value)}>
+           
+              {vendedores.map(v => (
+                <option key={v.value} value={v.value}>{v.label}</option>
+              ))}
+
+            </select>
+
+          </div> 
   
-                {/* Vendedor */}
-                <select 
-                  className={styles.filtroSelect} 
-                  value={vendedor} 
-                  onChange={(e) => setVendedor(e.target.value)}
-                >
-                  {vendedores.map(v => (
-                    <option key={v.value} value={v.value}>{v.label}</option>
-                  ))}
-                </select>
-              </div> {/* Fecha filtrosEsquerda */}
+          <button className={styles.limparBtn} onClick={limparFiltros}> <Eraser size={16} strokeWidth={2.5} /> Limpar filtros </button>
+        
+        </div> 
   
-              <button className={styles.limparBtn} onClick={limparFiltros}>
-                <Eraser size={16} strokeWidth={2.5} />
-                Limpar filtros
-              </button>
-            </div> {/* Fecha filtros */}
-  
-            {/* Tabela */}
-            <div className={styles.tableWrapper}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Data</th>
-                    <th>Produto</th>
-                    <th>Comprador</th>
-                    <th>Vendedor</th>
-                    <th>Quantidade</th>
-                    <th>Total</th>
+        <div className={styles.tableWrapper}>
+          
+          <table className={styles.table}>
+            <thead>
+
+              <tr>
+                <th>Data</th>
+                <th>Produto</th>
+                <th>Comprador</th>
+                <th>Vendedor</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              
+              {isLoading ? (
+                <tr><td colSpan={6} style={{ textAlign: 'center' }}>Carregando...</td></tr>
+              ) : vendas?.length === 0 ? (
+                <tr><td colSpan={6} style={{ textAlign: 'center' }}>Nenhuma venda encontrada</td></tr>
+              ) : (
+                
+                vendas?.map((venda) => (
+                  
+                  <tr key={venda.id}>
+                    
+                    <td>{new Date(venda.data).toLocaleDateString('pt-BR')}</td>
+                   
+                    <td className={styles.produtoLink}>
+                      
+                      {(() => {
+                        const itens = venda.itens || [];
+                        if (itens.length === 0) return '-';
+                        const primeiroProduto = itens[0]?.produto?.nome || itens[0]?.nomeProdutoManual || 'Produto';
+                        const qtdItensRestantes = itens.length - 1;
+                        return qtdItensRestantes > 0 ? `${primeiroProduto} +${qtdItensRestantes} itens` : primeiroProduto;
+                      })()}
+                      
+                    </td>
+                    
+                    <td>{venda.clienteFinal ? 'Cliente' : (venda.lojista?.nome || 'Lojista')}</td>
+                    <td>{venda.vendedor || '-'}</td>
+                    <td>{venda.itens?.reduce((acc, i) => acc + (i.quantidade || 0), 0) || 0}</td>
+                    <td className={styles.totalCell}> R$ {venda.valorTotal?.toFixed(2) || '0,00'} <button className={styles.menuCellBtn}> <Ellipsis size={16} strokeWidth={3} color='#02323C'/> </button> </td>
+                  
                   </tr>
-                </thead>
-                <tbody>
-                  {isLoading ? (
-                    <tr><td colSpan={6} style={{ textAlign: 'center' }}>Carregando...</td></tr>
-                  ) : vendas?.length === 0 ? (
-                    <tr><td colSpan={6} style={{ textAlign: 'center' }}>Nenhuma venda encontrada</td></tr>
-                  ) : (
-                    vendas?.map((venda) => (
-                      <tr key={venda.id}>
-                        <td>{new Date(venda.data).toLocaleDateString('pt-BR')}</td>
-                        <td className={styles.produtoLink}>
-                          {(() => {
-                            const itens = venda.itens || [];
-                            if (itens.length === 0) return '-';
-                            const primeiroProduto = itens[0]?.produto?.nome || itens[0]?.nomeProdutoManual || 'Produto';
-                            const qtdItensRestantes = itens.length - 1;
-                            return qtdItensRestantes > 0 
-                              ? `${primeiroProduto} +${qtdItensRestantes} itens`
-                              : primeiroProduto;
-                          })()}
-                        </td>
-                        <td>{venda.clienteFinal ? 'Cliente' : (venda.lojista?.nome || 'Lojista')}</td>
-                        <td>{venda.vendedor || '-'}</td>
-                        <td>{venda.itens?.reduce((acc, i) => acc + (i.quantidade || 0), 0) || 0}</td>
-                        <td className={styles.totalCell}>
-                          R$ {venda.valorTotal?.toFixed(2) || '0,00'}
-                          <button className={styles.menuCellBtn}>
-                            <Ellipsis size={16} strokeWidth={3} color='#02323C'/>
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
   
-            {/* Paginação e total */}
-            <div className={styles.tableFooter}>
-              <div className={styles.totalLabel}>
-                <span>Total:</span>
-                <strong>R$ {totalVendas.toFixed(2)}</strong>
-              </div>
-              <div className={styles.pagination}>
-                <button 
-                  className={styles.pageBtn} 
-                  onClick={() => setPage(Math.max(0, page - 1))}
-                  disabled={page === 0}
-                >
-                  <ChevronLeft size={18} strokeWidth={2.5} />
-                </button>
-                <span className={styles.pageInfo}>
-                  {page + 1} / {Math.ceil((vendas?.length || 0) / pageSize) || 1}
-                </span>
-                <button 
-                  className={styles.pageBtn} 
-                  onClick={() => setPage(page + 1)}
-                  disabled={vendas?.length < pageSize}
-                >
-                  <ChevronRight size={18} strokeWidth={2.5} />
-                </button>
-              </div>
-            </div>
+        <div className={styles.tableFooter}>
+        
+          <div className={styles.totalLabel}>
+            <span>Total:</span>
+            <strong>R$ {totalVendas.toFixed(2)}</strong>
           </div>
-  
-          {/* Botão Exportar PDF */}
-          <div className={styles.exportBtnContainer}>
-            <button className={styles.exportBtn}>
-              Exportar para PDF
-            </button>
+          
+          <div className={styles.pagination}>
+            <button className={styles.pageBtn} onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}> <ChevronLeft size={18} strokeWidth={2.5} /> </button>
+            <span className={styles.pageInfo}> {page + 1} / {Math.ceil((vendas?.length || 0) / pageSize) || 1} </span>
+            <button className={styles.pageBtn} onClick={() => setPage(page + 1)} disabled={vendas?.length < pageSize}> <ChevronRight size={18} strokeWidth={2.5} /> </button>
+          
           </div>
         </div>
-      </div>
-    );
+      </div>      
+    </div>
+  </div>
+  );
 };
 
 export default Vendas;

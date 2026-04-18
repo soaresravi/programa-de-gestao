@@ -1,0 +1,344 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.novaCidadeBtn {
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+    transform: scale(1.02);
+  }
+
+}
+
+.loading, .vazio {
+  text-align: center;
+  padding: 40px;
+  color: $preto;
+  font-size: 16px;
+  background-color: $branco;
+  border-radius: 20px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cidadeItem {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $verde-principal;
+  border-radius: 20px;
+  padding: 16px 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: scale(1.02);
+  }
+
+}
+
+.cidadeInfo {
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+}
+
+.cidadeNome {
+  font-size: 16px;
+  font-weight: 600;
+  color: $verde-escuro-textos;
+}
+
+.cidadeFrete {
+
+  font-size: 14px;
+  color: $branco;
+  font-weight: 500;
+  
+  &.freteGratis {
+    font-weight: 700;
+  }
+
+}
+
+.cidadeAcoes {
+  display: flex;
+  gap: 12px;
+}
+
+.editarBtn, .excluirBtn {
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  
+  &:hover {
+    color: $verde-semi-escuro;
+  }
+
+}
+
+.editarBtn {
+  color: $verde-escuro-textos;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: $fonte-principal;
+}
+
+.excluirBtn {
+  color: $verde-escuro-textos
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 470px;
+  max-width: 90%;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalConfirm {
+
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 400px;
+  max-width: 90%;
+  padding: 24px;
+  text-align: center;
+  
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: $verde-titulos;
+    margin-bottom: 12px;
+  }
+  
+  p {
+    font-size: 14px;
+    color: $preto;
+    margin-bottom: 24px;
+  }
+
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.modalClose {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $verde-titulos;
+  }
+
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin-bottom: 24px;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+  }
+  
+  input {
+
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+    &::placeholder {
+      color: $verde-escuro-textos;
+    }
+
+  }
+}
+
+.salvarBtn {
+
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.cancelarBtn {
+
+  background-color: transparent;
+  border: 1px solid $verde-titulos;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  color: $verde-titulos;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+
+}
+
+.confirmarBtn {
+
+  background-color: #dc2626;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  color: $branco;
+  cursor: pointer;
+  
+  &:hover:not(:disabled) {
+    background-color: #b91c1c;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}

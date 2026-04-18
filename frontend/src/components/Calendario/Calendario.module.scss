@@ -10,14 +10,17 @@
 }
 
 @keyframes fadeIn {
+
   from {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
   }
+
 }
 
 .calendarioHeader {
@@ -28,6 +31,7 @@
 }
 
 .mesButton {
+
   background: none;
   border: none;
   cursor: pointer;
@@ -42,6 +46,7 @@
   &:hover {
     background-color: rgba($verde-principal, 0.1);
   }
+
 }
 
 .mesTitulo {
@@ -70,10 +75,11 @@
 .diasGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0; /* SEM GAP - para ficar contínuo */
+  gap: 0; 
 }
 
 .diaButton {
+
   aspect-ratio: 1;
   background: none;
   border: none;
@@ -99,36 +105,32 @@
   &.otherMonth {
     color: $cinza-detalhe;
   }
-  
-  /* Dias dentro do intervalo */
+
   &.inRange {
     background-color: rgba($verde-principal, 0.25);
     border-radius: 0;
   }
   
-  /* Data INICIAL - círculo completo */
   &.startDate {
     background-color: $verde-principal;
     color: $branco;
     border-radius: 50% !important;
   }
   
-  /* Data FINAL - círculo completo */
   &.endDate {
     background-color: $verde-principal;
     color: $branco;
     border-radius: 50% !important;
   }
   
-  /* Remove o fundo do intervalo no dia inicial/final */
   &.inRange.startDate,
   &.inRange.endDate {
     background-color: $verde-principal;
   }
   
-  /* Quando é SÓ UM DIA */
   &.startDate.endDate {
     border-radius: 50% !important;
     background-color: $verde-principal;
   }
+  
 }

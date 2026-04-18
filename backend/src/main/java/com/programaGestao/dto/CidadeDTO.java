@@ -7,8 +7,8 @@ public class CidadeDTO {
     @NotBlank(message = "Nome da cidade é obrigatório")
     public String nome;
 
+    @PositiveOrZero(message = "Valor do frete deve ser positivo ou zero")
     @NotNull(message = "Valor do frete é obrigatório")
-    @Positive(message = "Valor do frete deve ser positivo")
-
+    
     public Double valorFrete;
 }
