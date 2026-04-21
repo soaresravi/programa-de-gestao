@@ -196,9 +196,10 @@ public class VendaResource {
             vendas = Venda.find(hql, params.toArray()).page(page, size).list();
 
         }
-
-        return Response.ok(vendas).header("X-Total-Count", totalCount).header("X-Total-Pages", (int) Math.ceil((double)
-        totalCount / size)).header("X-Current-Page", page).header("X-Page-Size", size).build();
+        
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+        VendaPaginadaDTO resultado = new VendaPaginadaDTO(vendas, totalCount, totalPages, page);
+        return Response.ok(resultado).header("X-Total-Count", totalCount).header("X-Total-Pages", totalPages).build();
     
     }
 
@@ -208,57 +209,54 @@ public class VendaResource {
     public Response getTotal(@QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim,
     @QueryParam("clienteFinal") Boolean clienteFinal, @QueryParam("tipoProduto") TipoProduto tipoProduto, @QueryParam("vendedor") String vendedor, @QueryParam("search") String search) {
 
-        StringBuilder query = new StringBuilder("1=1");
+        StringBuilder query = new StringBuilder("select count(v), sum(v.valorTotal), sum(v.lucroBruto) from Venda v ");
+
+        boolean temFiltroProduto = (tipoProduto != null) || (search != null && !search.trim().isEmpty());
+        
+        if (temFiltroProduto) {
+            query.append("left join v.itens i left join i.produto p ");
+        }
+
+        query.append("where 1=1 ");
         List<Object> params = new ArrayList<>();
 
         if (dataInicio != null && dataFim != null) {
-
-            query.append("and data between ?").append(params.size() + 1);
-            query.append(" and ?").append(params.size() + 2);
+            query.append("and v.data between ?").append(params.size() + 1).append(" and ?").append(params.size() + 2).append(" ");
             params.add(dataInicio);
             params.add(dataFim);
-
         }
 
         if (clienteFinal != null) {
-            query.append(" and clienteFinal = ?").append(params.size() + 1);
+            query.append("and v.clienteFinal = ?").append(params.size() + 1).append(" ");
             params.add(clienteFinal);
         }
 
         if (vendedor != null && !vendedor.trim().isEmpty()) {
-            query.append(" and vendedor like ?").append(params.size() + 1);
+            query.append("and v.vendedor like ?").append(params.size() + 1).append(" ");
             params.add("%" + vendedor + "%");
         }
 
-        boolean temFiltroProduto = (tipoProduto != null) || (search != null && !search.trim().isEmpty());
-
-        List<Venda> vendas;
-
-        if (temFiltroProduto) {
-
-            StringBuilder hql = new StringBuilder("select distinct v from Venda v left join v.itens i left join i.produto p where " + query.toString());
-
-            if (tipoProduto != null) {
-                hql.append(" and p.tipo = ?").append(params.size() + 1);
-                params.add(tipoProduto);
-            }
-
-            if (search != null && !search.trim().isEmpty()) {
-                hql.append(" and (p.nome like ?").append(params.size() + 1).append(")");
-                params.add("%" + search + "%");
-            }
-
-            vendas = Venda.find(hql.toString(), params.toArray()).list();
-
-        } else {
-            vendas = Venda.find("where " + query.toString(), params.toArray()).list();
+        if (tipoProduto != null) {
+            query.append("and p.tipo = ?").append(params.size() + 1).append(" ");
+            params.add(tipoProduto);
         }
 
-        double totalReceitaBruta = vendas.stream().mapToDouble(v -> v.valorTotal != null ? v.valorTotal : 0).sum();
-        double totalLucroBruto = vendas.stream().mapToDouble(v -> v.lucroBruto != null ? v.lucroBruto : 0).sum();
+        if (search != null && !search.trim().isEmpty()) {
+            query.append("and p.nome like ?").append(params.size() + 1).append(" ");
+            params.add("%" + search + "%");
+        }
 
-        return Response.ok(new TotalResponse(totalReceitaBruta, totalLucroBruto, vendas.size())).build();
+        Object[] result = (Object[]) Venda.find(query.toString(), params.toArray()).project(Object[].class).firstResult();
 
+        if (result == null) {
+            return Response.ok(new TotalResponse(0, 0, 0)).build();
+        }
+    
+        long quantidade = (long) (result[0] != null ? result[0] : 0L);
+        double receita = (double) (result[1] != null ? result[1] : 0.0);
+        double lucro = (double) (result[2] != null ? result[2] : 0.0);
+    
+        return Response.ok(new TotalResponse(receita, lucro, (int) quantidade)).build();
     }
 
     @GET

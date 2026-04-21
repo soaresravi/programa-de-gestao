@@ -3,6 +3,7 @@ package com.programaGestao.model;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.programaGestao.enums.Enums.*;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class Produto extends PanacheEntity {
     public Double precoVenda, custoProducao;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
+    @JsonIgnore
+    
     public List<MateriaPrimaProduto> materiasPrimas;
 
     public String fotoURL;

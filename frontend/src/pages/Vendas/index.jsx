@@ -5,10 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useSidebar } from '../../contexts/SidebarContext';
 import Sidebar from '../../components/Sidebar';
 import Calendario from '../../components/Calendario/Calendario';
+import ModalNovaVenda from './components/ModalNovaVenda';
 import api from '../../services/api';
 import styles from './Vendas.module.scss';
 
-const Vendas = () => {
+const Vendas = ({ addToast }) => {
+
+  const [usuario, setUsuario] = useState({ nome: '' });  
+  const { isExpanded } = useSidebar();
 
   const [search, setSearch] = useState('');
   const [dataInicio, setDataInicio] = useState('');
@@ -18,14 +22,31 @@ const Vendas = () => {
   const [vendedor, setVendedor] = useState('');
   const [page, setPage] = useState(0);
   const [pageSize] = useState(10);
+ 
   const [periodoPreset, setPeriodoPreset] = useState('mes');
   const [dataPersonalizadaInicio, setDataPersonalizadaInicio] = useState('');
   const [dataPersonalizadaFim, setDataPersonalizadaFim] = useState('');
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
   const [vendedoresOriginal, setVendedoresOriginal] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const calendarioRef = useRef(null);
 
-  const { isExpanded } = useSidebar();
+  useEffect(() => {
+    
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+    
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUsuario({ nome: payload.upn?.split('@')[0] || 'Usuário' });
+      } catch (error) {
+        setUsuario({ nome: 'Usuário' });
+      }
+
+    }
+    
+  }, []);
 
   useEffect(() => {
     
@@ -132,14 +153,16 @@ const Vendas = () => {
 
   });
 
+  const vendasExibidas = vendas?.content || [];
+
   useEffect(() => {
-        
-    if (vendas && vendedoresOriginal.length === 0) {
-      const vendedoresUnicos = [...new Set(vendas.map(v => v.vendedor).filter(Boolean))];
+    if (vendasExibidas.length > 0 && vendedoresOriginal.length === 0) {
+      const vendedoresUnicos = [...new Set(vendasExibidas.map(v => v.vendedor).filter(Boolean))];
       setVendedoresOriginal(vendedoresUnicos);
     }
+  }, [vendasExibidas]);
 
-  }, [vendas]);
+  const totalVendas = vendasExibidas.reduce((acc, v) => acc + (v.valorTotal || 0), 0);
 
   const tiposProduto = [
     { value: '', label: 'Selecionar tipo de produto' },
@@ -173,8 +196,6 @@ const Vendas = () => {
     setPeriodoPreset('mes');
   };
 
-  const totalVendas = vendas?.reduce((acc, v) => acc + (v.valorTotal || 0), 0) || 0;
-
   return (
   
   <div className={styles.container}>
@@ -198,13 +219,13 @@ const Vendas = () => {
       <div className={styles.header}>
        
         <div>
-          <h1 className={styles.title}>Olá, David!</h1>
+          <h1 className={styles.title}>Olá, {usuario.nome}!</h1>
           <p className={styles.subtitle}>Acompanhe o relatório completo das suas vendas.</p>
         </div>
 
         <div className={styles.headerButtons}>
           <button className={styles.exportBtn}> Exportar para PDF </button>
-          <button className={styles.novaVendaBtn}> <Plus size={20} strokeWidth={4} /> Nova venda </button>
+          <button className={styles.novaVendaBtn} onClick={() => setShowModal(true)}> <Plus size={20} strokeWidth={4} /> Nova venda </button>
         </div>
         
       </div>
@@ -323,15 +344,19 @@ const Vendas = () => {
               
               {isLoading ? (
                 <tr><td colSpan={6} style={{ textAlign: 'center' }}>Carregando...</td></tr>
-              ) : vendas?.length === 0 ? (
+              ) : vendasExibidas.length === 0 ? (
                 <tr><td colSpan={6} style={{ textAlign: 'center' }}>Nenhuma venda encontrada</td></tr>
               ) : (
                 
-                vendas?.map((venda) => (
+                vendasExibidas.map((venda) => (
                   
                   <tr key={venda.id}>
                     
-                    <td>{new Date(venda.data).toLocaleDateString('pt-BR')}</td>
+                    <td> {(() => {
+                      if (!venda.data) return '-';
+                      const [ano, mes, dia] = venda.data.split('-');
+                      return `${dia}/${mes}/${ano}`;
+                    })()}</td>
                    
                     <td className={styles.produtoLink}>
                       
@@ -366,13 +391,16 @@ const Vendas = () => {
           
           <div className={styles.pagination}>
             <button className={styles.pageBtn} onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0}> <ChevronLeft size={18} strokeWidth={2.5} /> </button>
-            <span className={styles.pageInfo}> {page + 1} / {Math.ceil((vendas?.length || 0) / pageSize) || 1} </span>
-            <button className={styles.pageBtn} onClick={() => setPage(page + 1)} disabled={vendas?.length < pageSize}> <ChevronRight size={18} strokeWidth={2.5} /> </button>
-          
+            <span className={styles.pageInfo}> {page + 1} / {vendas?.totalPages || 1} </span>
+            <button className={styles.pageBtn} onClick={() => setPage(page + 1)} disabled={page + 1 >= (vendas?.totalPages || 0)}> <ChevronRight size={18} strokeWidth={2.5} /> </button>
           </div>
+
         </div>
       </div>      
     </div>
+
+    {showModal && ( <ModalNovaVenda onClose={() => setShowModal(false)} onSuccess={() => refetch()}  addToast={addToast} /> )}
+    
   </div>
   );
 };

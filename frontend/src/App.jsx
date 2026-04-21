@@ -34,7 +34,7 @@ function App() {
 
           <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
           <Route path="/produtos" element={isAuthenticated ? <Produtos /> : <Navigate to="/login" /> } />
-          <Route path="/vendas" element={isAuthenticated ? <Vendas /> : <Navigate to="/login" />} />
+          <Route path="/vendas" element={isAuthenticated ? <Vendas addToast={addToast} /> : <Navigate to="/login" />} />
           <Route path="/cidades" element={<Cidades addToast={addToast} />} />
         
         </Routes>  
