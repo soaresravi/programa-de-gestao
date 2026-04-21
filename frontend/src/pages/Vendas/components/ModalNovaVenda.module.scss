@@ -27,7 +27,7 @@
   width: 670px;
   max-height: 85vh;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: $sombra-card;
   display: flex;
   flex-direction: column;
 }
