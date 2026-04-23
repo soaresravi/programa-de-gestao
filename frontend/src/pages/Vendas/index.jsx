@@ -6,6 +6,7 @@ import { useSidebar } from '../../contexts/SidebarContext';
 import Sidebar from '../../components/Sidebar';
 import Calendario from '../../components/Calendario/Calendario';
 import ModalNovaVenda from './components/ModalNovaVenda';
+import ModalVendaDetalhes from './ModalVendaDetalhes';
 import api from '../../services/api';
 import styles from './Vendas.module.scss';
 
@@ -29,6 +30,8 @@ const Vendas = ({ addToast }) => {
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
   const [vendedoresOriginal, setVendedoresOriginal] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false);
+  const [vendaSelecionadaId, setVendaSelecionadaId] = useState(null);
   const calendarioRef = useRef(null);
 
   useEffect(() => {
@@ -196,6 +199,11 @@ const Vendas = ({ addToast }) => {
     setPeriodoPreset('mes');
   };
 
+  const handleAbrirDetalhes = (vendaId) => {
+    setVendaSelecionadaId(vendaId);
+    setModalDetalhesAberto(true);
+  };
+
   return (
   
   <div className={styles.container}>
@@ -358,7 +366,7 @@ const Vendas = ({ addToast }) => {
                       return `${dia}/${mes}/${ano}`;
                     })()}</td>
                    
-                    <td className={styles.produtoLink}>
+                    <td className={styles.produtoLink} onClick={() => handleAbrirDetalhes(venda.id)}>
                       
                       {(() => {
                         const itens = venda.itens || [];
@@ -373,7 +381,11 @@ const Vendas = ({ addToast }) => {
                     <td>{venda.clienteFinal ? 'Cliente' : (venda.lojista?.nome || 'Lojista')}</td>
                     <td>{venda.vendedor || '-'}</td>
                     <td>{venda.itens?.reduce((acc, i) => acc + (i.quantidade || 0), 0) || 0}</td>
-                    <td className={styles.totalCell}> R$ {venda.valorTotal?.toFixed(2) || '0,00'} <button className={styles.menuCellBtn}> <Ellipsis size={16} strokeWidth={3} color='#02323C'/> </button> </td>
+                    
+                    <td className={styles.totalCell}>
+                      R$ {venda.valorTotal?.toFixed(2) || '0,00'}
+                      <button className={styles.menuCellBtn} onClick={() => handleAbrirDetalhes(venda.id)}> <Ellipsis size={16} strokeWidth={3} color='#02323C'/> </button>
+                    </td>
                   
                   </tr>
                 ))
@@ -398,7 +410,13 @@ const Vendas = ({ addToast }) => {
         </div>
       </div>      
     </div>
-
+    
+    <ModalVendaDetalhes isOpen={modalDetalhesAberto}
+    onClose={() => {
+      setModalDetalhesAberto(false);
+      setVendaSelecionadaId(null);
+    }} vendaId={vendaSelecionadaId} addToast={addToast} onSuccess={() => refetch()} />
+    
     {showModal && ( <ModalNovaVenda onClose={() => setShowModal(false)} onSuccess={() => refetch()}  addToast={addToast} /> )}
     
   </div>

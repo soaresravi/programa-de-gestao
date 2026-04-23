@@ -41,6 +41,7 @@ public class ProdutoResource {
         produto.especificacao = dto.especificacao;
         produto.precoVenda = dto.precoVenda;
         produto.fotoURL = dto.fotoURL;
+        produto.custoProducao = dto.custoProducao;
         
         produto.persist();
 

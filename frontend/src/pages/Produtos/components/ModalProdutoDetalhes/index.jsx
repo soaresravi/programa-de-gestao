@@ -281,7 +281,7 @@ const ModalProdutoDetalhes = ({ isOpen, onClose, produto, onSave, showSuccess, s
     { value: 'POLIESTER', label: 'Poliéster' },
   ];
 
-  const custoTotal = formData.materiasPrimas?.reduce((total, mp) => total + (mp.quantidade * mp.valorUnitarioNoMomento), 0) || 0;
+  const custoTotal = formData.tipo === 'MATERIA_PRIMA' ? (formData.custoProducao || 0) : formData.materiasPrimas?.reduce((total, mp) => total + (mp.quantidade * mp.valorUnitarioNoMomento), 0) || 0;
   const lucro = (formData.precoVenda || 0) - custoTotal;
 
   if (!isOpen) return null;

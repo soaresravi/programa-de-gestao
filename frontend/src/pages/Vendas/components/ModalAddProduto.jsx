@@ -223,12 +223,12 @@ const ModalAddProduto = ({ onClose, onAdd, addToast, isLojista, isEditing, initi
             <div className={styles.infoRow}>
                 
                 <div className={styles.infoItem}>
-                    <span>Gasto:</span>
+                    <span>Gasto/item:</span>
                     <strong className={styles.valorVermelho}> R$ {(selectedProduto.custoProducao || 0).toFixed(2)} </strong>
                 </div>
                 
                 <div className={styles.infoItem}>
-                    <span>Lucro:</span>
+                    <span>Lucro/item:</span>
                     <strong className={styles.valorEscuro}> R$ {isLojista ? ((parseFloat(precoManual) || 0) - (selectedProduto.custoProducao || 0)).toFixed(2) : ((selectedProduto.precoVenda || 0) - (selectedProduto.custoProducao || 0)).toFixed(2)} </strong>
                 </div>
 

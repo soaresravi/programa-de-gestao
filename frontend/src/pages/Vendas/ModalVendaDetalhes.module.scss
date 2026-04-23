@@ -1,0 +1,686 @@
+@use '../../styles/variables' as *;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 30px;
+  width: 750px;
+  max-width: 90%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalLado {
+  animation: slideInRight 0.2s ease-out;
+}
+
+@keyframes slideInRight {
+  
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  } to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+}
+
+.modalContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 0 24px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.dataInput {
+  
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  width: 115px;
+  font-size: 13px;
+  font-family: $fonte-principal;
+  
+  &:focus {
+    outline: none;
+    box-shadow: $sombra-botao;
+  }
+
+}
+
+.pillContainer {
+  display: flex;
+  gap: 8px;
+}
+
+.pill {
+ 
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &.active {
+    background-color: $verde-titulos;
+    color: $branco;
+  }
+  
+  &:hover:not(.active) {
+    background-color: rgba($verde-titulos, 0.2);
+  }
+
+}
+
+@keyframes slideDown {
+ 
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  } to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+  margin-bottom: 4px;
+}
+
+.modalSubtitle {
+  font-size: 14px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: -10px;
+}
+
+.dataInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 0;
+}
+
+.dataLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+}
+
+.dataValue {
+  font-size: 16px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.modalClose {
+  
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin: 0 24px;
+  margin-bottom: 10px;
+}
+
+.dividerLight {
+  height: 1px;
+  background-color: rgba($preto, 0.08);
+  margin: 16px 0;
+}
+
+.modalContent {
+  
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 24px 24px;
+  margin-right: 5px;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba($preto, 0.1);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $verde-titulos;
+    border-radius: 3px;
+  }
+
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+
+}
+
+.addProdutoBtn {
+ 
+  display: flex;
+  align-items: center;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+  
+}
+
+.listaProdutos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.produtoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $verde-principal;
+  border-radius: 20px;
+  padding: 10px 16px;
+}
+
+.produtoNome {
+  color: $branco;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.produtoAcoes {
+  display: flex;
+  gap: 8px;
+}
+
+.editarItemBtn {
+  background: none;
+  border: none;
+  color: $verde-escuro-textos;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: $fonte-principal;
+}
+
+.excluirItemBtn {
+  background: none;
+  border: none;
+  color: $verde-escuro-textos;
+  cursor: pointer;
+}
+
+.formRow {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.formGroup {
+ 
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  
+  input, select {
+    
+    flex: 1;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+  }
+}
+
+.freteValor {
+  font-size: 14px;
+  font-weight: 700;
+  color: $verde-principal;
+  margin-left: 10px;
+}
+
+.formGroupFrete, .formGroupDesconto {
+  
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+  }
+  
+  input {
+   
+    width: 50px !important;
+    min-width: 80px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+  }
+}
+
+.formGroupPagamento {
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  
+  select {
+  
+    width: 100px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+  }
+}
+
+.formGroupParcelas {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+  }
+  
+  select {
+  
+    width: 70px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 4px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+  }
+}
+
+.formGroupTotal {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+    min-width: 50px;
+  }
+  
+  input {
+    width: 100px;
+    background-color: #e5e5e5;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    text-align: center;
+  }
+
+}
+
+.formGroupCidade {
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+    min-width: 55px;
+  }
+  
+  > div {
+    width: 215px;
+  }
+
+}
+
+.inputDisabled {
+  background-color: #e5e5e5 !important;
+  color: $preto;
+  cursor: not-allowed;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.editButton {
+
+  background: transparent;
+  border: 2px solid $verde-principal;
+  color: $verde-principal;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+
+}
+
+.saveButton {
+ 
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}
+
+.deleteButton {
+  
+  background-color: #dc2626;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #b91c1c;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+}
+
+.produtoInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.produtoDetalhes {
+  display: flex;
+  gap: 16px;
+}
+
+.produtoQtd {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.produtoValor {
+  font-size: 12px;
+  font-weight: 700;
+  color: $verde-claro;
+}
+
+.formGroupVendedor, .formGroupComprador, .formGroupLojista {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+  }
+  
+  input, select {
+   
+    width: 100px;
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-botao;
+    }
+
+  }
+}
+
+.formGroupComprador {
+ 
+  .pillContainer {
+    display: flex;
+    gap: 4px;
+  }
+  
+  .pill {
+   
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 50px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    
+    &.active {
+      background-color: $verde-titulos;
+      color: $branco;
+    }
+
+  }
+}
+
+.formGroupCusto, .formGroupLucro {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  
+  span {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 4px 8px;
+  }
+  
+}
+
+.valorVermelho {
+  color: #dc2626;
+}
+
+.valorVerde {
+  color: $verde-principal;
+}

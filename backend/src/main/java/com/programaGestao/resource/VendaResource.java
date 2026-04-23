@@ -85,6 +85,16 @@ public class VendaResource {
        
                 item.precoUnitario = itemDTO.precoUnitario;
                 item.custoUnitario = itemDTO.custoUnitario != null ? itemDTO.custoUnitario : 0;
+
+                if (itemDTO.produtoId != null) {
+                    
+                    Produto produto = Produto.findById(itemDTO.produtoId);
+                    
+                    if (produto != null) {
+                        item.produto = produto;
+                    }
+
+                }
        
             } else {
 
@@ -337,6 +347,16 @@ public class VendaResource {
                 
                 item.precoUnitario = itemDTO.precoUnitario;
                 item.custoUnitario = itemDTO.custoUnitario != null ? itemDTO.custoUnitario : 0;
+
+                if (itemDTO.produtoId != null) {
+                   
+                    Produto produto = Produto.findById(itemDTO.produtoId);
+                   
+                    if (produto != null) {
+                        item.produto = produto;
+                    }
+                    
+                }
            
             } else {
 
