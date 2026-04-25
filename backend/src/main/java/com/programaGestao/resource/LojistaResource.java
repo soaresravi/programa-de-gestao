@@ -26,10 +26,10 @@ public class LojistaResource {
     public Response criar(@Valid LojistaDTO dto) {
 
         Lojista lojista = new Lojista();
-
+        
         lojista.nome = dto.nome;
-        lojista.totalVendas = dto.totalVendas;
-        lojista.totalGasto = dto.totalGasto;
+        lojista.totalVendas = 0;
+        lojista.totalGasto = 0.0;
 
         lojista.persist();
         return Response.ok(lojista).build();
@@ -71,8 +71,6 @@ public class LojistaResource {
         }
 
         lojista.nome = dto.nome;
-        lojista.totalVendas = dto.totalVendas;
-        lojista.totalGasto = dto.totalGasto;
 
         lojista.persist();
         return Response.ok(lojista).build();

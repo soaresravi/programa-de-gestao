@@ -37,6 +37,7 @@
 }
 
 .modalClose {
+
   background: none;
   border: none;
   cursor: pointer;
@@ -50,6 +51,7 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
+
 }
 
 .divider {
@@ -65,6 +67,7 @@
 }
 
 .formGroup {
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -75,9 +78,11 @@
     color: $verde-escuro-textos;
     font-family: $fonte-principal;
   }
+
 }
 
 .selectPeriodo {
+ 
   background-color: $verde-claro;
   border: none;
   border-radius: 8px;
@@ -89,6 +94,7 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba($verde-titulos, 0.3);
   }
+
 }
 
 .calendarioWrapper {
@@ -106,12 +112,15 @@
 .calendarioDropdown {
   position: absolute;
   top: 50%;
-  left: calc(100% + 12px); /* +12px para dar espaçamento */
+  left: calc(100% + 12px);
   transform: translateY(-50%);
   z-index: 100;
+  margin-left: 40px;
+  margin-top: -30px;
 }
 
 .limparDatasBtn {
+ 
   background: none;
   border: none;
   cursor: pointer;
@@ -126,9 +135,11 @@
   &:hover {
     background-color: rgba($verde-titulos, 0.1);
   }
+
 }
 
 .calendarioTrigger {
+ 
   display: flex;
   align-items: center;
   gap: 8px;
@@ -143,10 +154,12 @@
     color: $preto;
     flex: 1;
   }
+
 }
 
 
 .infoBox {
+ 
   background-color: #f0fdf4;
   border-radius: 8px;
   padding: 12px;
@@ -157,6 +170,7 @@
     color: $verde-titulos;
     margin: 0;
   }
+
 }
 
 .buttonRow {
@@ -167,6 +181,7 @@
 }
 
 .cancelarBtn {
+  
   background: transparent;
   border: 1px solid $verde-titulos;
   border-radius: 50px;
@@ -180,9 +195,11 @@
   &:hover {
     background-color: rgba($verde-titulos, 0.1);
   }
+
 }
 
 .gerarBtn {
+ 
   background-color: $verde-principal;
   color: $branco;
   border: none;
@@ -201,4 +218,5 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
+
 }

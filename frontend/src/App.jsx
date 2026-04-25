@@ -8,11 +8,12 @@ import ToastContainer from './pages/Produtos/components/Toast/ToastContainer';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha';
-import Vendas from './pages/Vendas';
 import Cidades from './pages/Cidades';
+import Lojistas from './pages/Lojistas';
 
 const Produtos = lazy(() => import('./pages/Produtos'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Vendas = lazy(() => import('./pages/Vendas'));
 
 function App() {
   
@@ -35,7 +36,8 @@ function App() {
           <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
           <Route path="/produtos" element={isAuthenticated ? <Produtos /> : <Navigate to="/login" /> } />
           <Route path="/vendas" element={isAuthenticated ? <Vendas addToast={addToast} /> : <Navigate to="/login" />} />
-          <Route path="/cidades" element={<Cidades addToast={addToast} />} />
+          <Route path="/cidades" element={isAuthenticated ? <Cidades addToast={addToast} /> : <Navigate to="/login" /> } />
+          <Route path="/lojistas" element={isAuthenticated ? <Lojistas addToast={addToast} /> : <Navigate to="/login" />} />
         
         </Routes>  
 
