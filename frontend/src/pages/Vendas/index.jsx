@@ -38,19 +38,22 @@ const Vendas = ({ addToast }) => {
 
   useEffect(() => {
     
-    const token = localStorage.getItem('token');
-    
-    if (token) {
-    
+    const buscarDadosUsuario = async () => {
+     
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUsuario({ nome: payload.upn?.split('@')[0] || 'Usuário' });
+        const response = await api.get('/auth/me');
+        setUsuario({ nome: response.data.nome });
       } catch (error) {
+        console.error("Erro ao buscar dados do usuário:", error);
         setUsuario({ nome: 'Usuário' });
       }
 
+    };
+
+    if (localStorage.getItem('token')) {
+      buscarDadosUsuario();
     }
-    
+
   }, []);
 
   useEffect(() => {

@@ -65,19 +65,20 @@ const Produtos = () => {
 
   useEffect(() => {
 
-    const token = localStorage.getItem('token');
-
-    if (token) {
-
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        setUsuario({ nome: payload.upn?.split('@')[0] || 'Usuário' });
+    const buscarNomeUsuario = async () => {
+      
+      try {  
+        const response = await api.get('/auth/me');
+        setUsuario({ nome: response.data.nome });
       } catch (error) {
+        console.error("Erro ao buscar nome:", error);
         setUsuario({ nome: 'Usuário' });
       }
 
-    }
-
+    };
+  
+    buscarNomeUsuario();
+    
   }, []);
 
   const { data: produtos, refetch} = useQuery({

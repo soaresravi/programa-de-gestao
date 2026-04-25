@@ -8,6 +8,7 @@ import com.programaGestao.dto.*;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 
 import jakarta.ws.rs.core.SecurityContext;
@@ -66,7 +67,7 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Email ou senha inválidos").build();
         }
 
-        String token = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).expiresIn(Duration.ofHours(8)).sign();
+        String token = Jwt.issuer("https://programa-de-gestao.com").upn(String.valueOf(usuario.id)).subject(String.valueOf(usuario.id)).groups(Set.of("user")).expiresIn(Duration.ofHours(8)).sign();
         String refreshToken = UUID.randomUUID().toString();
 
         RefreshToken rt = new RefreshToken();
@@ -110,6 +111,32 @@ public class AuthResource {
 
         return Response.ok(new TokenResponse(newToken, newRefreshToken, usuario.id, usuario.nome, usuario.email)).build();
         
+    }
+
+    @GET
+    @Path("/me")
+    @RolesAllowed("user")
+    
+    public Response getCurrentUser(@Context SecurityContext ctx) {
+        
+        Long usuarioId = SecurityResource.getUsuarioId(ctx);
+        
+        if (usuarioId == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        Usuario usuario = Usuario.findById(usuarioId);
+        
+        if (usuario == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        
+        UserDTO dto = new UserDTO();
+        dto.nome = usuario.nome;
+        dto.email = usuario.email;
+        
+        return Response.ok(dto).build();
+    
     }
 
     @PUT

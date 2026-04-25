@@ -1,0 +1,378 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+  max-width: 800px;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  margin-bottom: 16px;
+}
+
+.card {
+  background-color: $branco;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+  }
+  
+  input {
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: $sombra-card;
+    }
+  }
+}
+
+.infoValue {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $preto;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.editBtn {
+  background-color: transparent;
+  border: 2px solid $verde-principal;
+  color: $verde-principal;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.cancelBtn {
+  background-color: transparent;
+  border: 1px solid $cinza-detalhe;
+  color: $verde-titulos;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.changePasswordBtn {
+  background-color: transparent;
+  border: 2px solid $verde-titulos;
+  color: $verde-titulos;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  width: 100%;
+  
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  input {
+    flex: 1;
+    padding-right: 40px;
+  }
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-escuro-textos;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $verde-titulos;
+  }
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: $verde-titulos;
+  border: none;
+  color: $branco;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 12px;
+  
+  &:hover {
+    background-color: $verde-escuro-textos;
+  }
+}
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 2px solid #dc2626;
+  color: #dc2626;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  width: 100%;
+  
+  &:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+  }
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 470px;
+  max-width: 90%;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    color: $verde-titulos;
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin-bottom: 24px;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.warningText {
+  font-size: 14px;
+  color: #dc2626;
+  font-weight: 600;
+  text-align: center;
+  padding: 12px;
+  background-color: rgba(220, 38, 38, 0.1);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancelarBtn {
+  background-color: transparent;
+  border: 1px solid $verde-titulos;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  color: $verde-titulos;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+}
+
+.confirmarBtn {
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.deleteConfirmBtn {
+  background-color: #dc2626;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #b91c1c;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}

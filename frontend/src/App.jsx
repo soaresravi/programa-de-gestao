@@ -10,6 +10,7 @@ import Cadastro from './pages/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha';
 import Cidades from './pages/Cidades';
 import Lojistas from './pages/Lojistas';
+import Configuracoes from './pages/Configuracoes';
 
 const Produtos = lazy(() => import('./pages/Produtos'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -38,6 +39,7 @@ function App() {
           <Route path="/vendas" element={isAuthenticated ? <Vendas addToast={addToast} /> : <Navigate to="/login" />} />
           <Route path="/cidades" element={isAuthenticated ? <Cidades addToast={addToast} /> : <Navigate to="/login" /> } />
           <Route path="/lojistas" element={isAuthenticated ? <Lojistas addToast={addToast} /> : <Navigate to="/login" />} />
+          <Route path="/configuracoes" element={isAuthenticated ? <Configuracoes addToast={addToast} onLogout={() => {}} /> : <Navigate to="/login" /> } />
         
         </Routes>  
 
