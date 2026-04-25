@@ -1,0 +1,204 @@
+@use '../../styles/variables' as *;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 400px;
+  max-width: 90%;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin-bottom: 20px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+  }
+}
+
+.selectPeriodo {
+  background-color: $verde-claro;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($verde-titulos, 0.3);
+  }
+}
+
+.calendarioWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.calendarioHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.calendarioDropdown {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 12px); /* +12px para dar espaçamento */
+  transform: translateY(-50%);
+  z-index: 100;
+}
+
+.limparDatasBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $verde-titulos;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+}
+
+.calendarioTrigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-claro;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  
+  span {
+    font-size: 13px;
+    font-family: $fonte-principal;
+    color: $preto;
+    flex: 1;
+  }
+}
+
+
+.infoBox {
+  background-color: #f0fdf4;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  
+  p {
+    font-size: 12px;
+    color: $verde-titulos;
+    margin: 0;
+  }
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cancelarBtn {
+  background: transparent;
+  border: 1px solid $verde-titulos;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  color: $verde-titulos;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-titulos, 0.1);
+  }
+}
+
+.gerarBtn {
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}

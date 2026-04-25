@@ -14,10 +14,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 @Path("/vendas")
 @RolesAllowed("user")
@@ -437,29 +440,48 @@ public class VendaResource {
     @POST
     @Path("/exportar-pdf")
     @Produces("application/pdf")
+   
+    public Response exportarPDF( @QueryParam("dataInicio") String dataInicioStr, @QueryParam("dataFim") String dataFimStr) {
+    
+        try {
 
-    public Response exportarPDF(@QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim) {
+            if (dataInicioStr == null || dataFimStr == null || dataInicioStr.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Datas inválidas").build();
+            }
 
-        if (dataInicio == null || dataFim == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Data de início e fim são obrigatórias").build();
+            LocalDate dataInicio = LocalDate.parse(dataInicioStr);
+            LocalDate dataFim = LocalDate.parse(dataFimStr);
+
+            List<Venda> vendas = Venda.find("data between ?1 and ?2 order by data desc", dataInicio, dataFim).list();
+            String html = gerarHtmlRelatorio(vendas, dataInicio, dataFim);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ITextRenderer renderer = new ITextRenderer();
+
+            renderer.setDocumentFromString(html);
+            renderer.layout();
+            renderer.createPDF(byteArrayOutputStream);
+            
+            byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+            
+            return Response.ok(pdfBytes).type("application/pdf").header("Content-Disposition", "attachment; filename=relatorio_vendas.pdf").build();
+            
+        } catch (DateTimeParseException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Formato de data inválido. Use YYYY-MM-DD").build();
         }
 
-        List<Venda> vendas = Venda.find("data between ?1 and ?2 order by data desc", dataInicio, dataFim).list();
-        String html = gerarHtmlRelatorio(vendas, dataInicio, dataFim);
-        return Response.ok(html).type(MediaType.TEXT_HTML).build();
-
     }
-
+    
     private String gerarHtmlRelatorio(List<Venda> vendas, LocalDate dataInicio, LocalDate dataFim) {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+    
         double totalReceita = vendas.stream().mapToDouble(v -> v.valorTotal != null ? v.valorTotal : 0).sum();
         
         double totalCusto = vendas.stream().mapToDouble(v -> { 
             
             double custo = 0;
-
+            
             if (v.itens != null) {
                 custo = v.itens.stream().mapToDouble(i -> i.quantidade * (i.custoUnitario != null ? i.custoUnitario : 0)).sum();
             }
@@ -467,133 +489,247 @@ public class VendaResource {
             return custo;
 
         }).sum();
-
+    
         double totalLucro = vendas.stream().mapToDouble(v -> v.lucroBruto != null ? v.lucroBruto : 0).sum();
         int totalVendas = vendas.size();
-
+    
         StringBuilder html = new StringBuilder();
-
+    
         html.append("<!DOCTYPE html>");
         html.append("<html><head>");
-        html.append("<meta charset='UTF-8'>");
+        html.append("<meta charset='UTF-8' />");
+        
         html.append("<style>");
-        html.append("body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; background: #f5f5f5; }");
-        html.append(".container { max-width: 1400px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }");
-        html.append("h1 { color: #14532d; border-left: 5px solid #22c55e; padding-left: 20px; margin-bottom: 10px; }");
-        html.append("h2 { color: #166534; font-size: 18px; margin-top: 0; margin-bottom: 20px; }");
-        html.append(".header-info { background: #f0fdf4; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; flex-wrap: wrap; }");
-        html.append(".header-info p { margin: 5px 0; color: #166534; }");
-        html.append(".summary { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }");
-        html.append(".summary-card { background: #f0fdf4; border-radius: 12px; padding: 15px 25px; flex: 1; min-width: 150px; text-align: center; border: 1px solid #bbf7d0; }");
-        html.append(".summary-card h3 { margin: 0 0 8px 0; color: #166534; font-size: 14px; font-weight: normal; }");
-        html.append(".summary-card .value { font-size: 28px; font-weight: bold; color: #14532d; }");
-        html.append("table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }");
-        html.append("th { background-color: #14532d; color: white; padding: 12px 8px; text-align: left; font-weight: 600; }");
-        html.append("td { border: 1px solid #e5e7eb; padding: 10px 8px; vertical-align: top; }");
+        html.append("@page { size: portrait; margin: 0.8cm; }");
+        html.append("body { font-family: Helvetica, Times New Roman; font-size: 10px; color: #333; margin: 0; }");
+        html.append(".container { width: 100%; }");
+    
+        html.append("h1 { color: #000000; font-weight: bold; font-size: 16px; margin: 0 0 5px 0; }");
+        html.append("h2 { color: #166534; font-size: 13px; margin: 0 0 10px 0; }");
+        
+        html.append(".header-info { width: 100%; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between; }");
+        
+        html.append(".summary-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }");
+        html.append(".summary-card { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px; text-align: center; }");
+        html.append(".summary-card h3 { margin: 0; font-size: 10px; color: #166534; text-transform: uppercase; }");
+        html.append(".summary-card .value { font-size: 14px; font-weight: bold; color: #14532d; }");
+    
+        html.append("table { width: 100%; border-collapse: collapse; font-size: 9px; }");
+        html.append("th { background-color: #14532d; color: white; padding: 5px 3px; text-align: left; }");
+        html.append("td { border: 1px solid #e5e7eb; padding: 4px 3px; vertical-align: top; }");
         html.append("tr:nth-child(even) { background-color: #f9fafb; }");
-        html.append(".footer { margin-top: 30px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 20px; }");
-        html.append(".badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; }");
+        
+        html.append(".badge { padding: 1px 4px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; }");
         html.append(".badge-yes { background: #dcfce7; color: #166534; }");
         html.append(".badge-no { background: #fee2e2; color: #991b1b; }");
+        
+        html.append(".footer { margin-top: 20px; text-align: center; font-size: 8px; color: #6b7280; }");
+        
+        html.append(".col-pequena { width: 35px; text-align: center; }");
+        html.append(".col-valor { width: 60px; text-align: right; }");
+        html.append(".col-produto { width: 130px; }");
+        html.append("td.col-pequena { text-align: center; }");
+        html.append("td.col-valor { text-align: right; }");
+        
         html.append("</style>");
         html.append("</head><body>");
         html.append("<div class='container'>");
-
-        html.append("<h1> PROGRAMA DE GESTÃO - DAVID COLCHÕES </h1>");
-        html.append("<h2>Relatório de Vendas</h2>");
-
+    
+        html.append("<h1> Programa de gestão - David Colchões </h1>");
+        html.append("<h2>Relatório de vendas</h2>");
+    
         html.append("<div class='header-info'>");
-        html.append("<div><strong> Período: </strong>").append(dataInicio.format(fmt)).append(" a ").append(dataFim.format(fmt)).append("</div>");
-        html.append("<div> <strong>Gerado em: </strong>").append(LocalDate.now().format(fmt)).append("</div>");
-
-        html.append("<div class='summary'>");
-        html.append("<div class='summary-card'> <h3> Total de vendas </h3><div class='value'>").append(totalVendas).append("</div></div>");
-        html.append("<div class='summary-card'> <h3> Receita total </h3><div class='value'>R$ ").append(String.format("%,.2f", totalReceita)).append("</div></div>");
-        html.append("<div class='summary-card'> <h3> Custo total </h3><div class='value'>R$ ").append(String.format("%,.2f", totalCusto)).append("</div></div>");
-        html.append("<div class='summary-card'> <h3> Lucro total </h3><div class='value'>R$ ").append(String.format("%,.2f", totalLucro)).append("</div></div>");
+        html.append("<div><strong>Período:</strong> ").append(dataInicio.format(fmt)).append(" a ").append(dataFim.format(fmt)).append("</div>");
+        html.append("<div><strong>Gerado em:</strong> ").append(LocalDate.now().format(fmt)).append("</div>");
         html.append("</div>");
-
-        html.append("<table>");
+        
+        html.append("<table class='summary-table'>");
+        html.append("<tr>");
+        html.append("<td class='summary-card' width='25%'><h3>Vendas</h3><div class='value'>").append(totalVendas).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Receita</h3><div class='value'>R$ ").append(String.format("%,.2f", totalReceita)).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Custo</h3><div class='value'>R$ ").append(String.format("%,.2f", totalCusto)).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Lucro</h3><div class='value'>R$ ").append(String.format("%,.2f", totalLucro)).append("</div></td>");
+        html.append("</tr>");
+        html.append("</table>");
+    
+        html.append("<table>"); 
         html.append("<thead>");
         html.append("<tr>");
-        html.append("<th>ID</th><th>Data</th><th>Produtos</th><th>Cidade</th><th>Qtd</th><th>Valor Unit</th>");
-        html.append("<th>Frete</th><th>Descrição</th><th>Forma Pag</th><th>Parcelas</th><th>Total</th>");
-        html.append("<th>Loja</th><th>Vendedor</th><th>Comprador</th><th>Nome Loja</th><th>Custo</th><th>Lucro</th>");
+        html.append("<th>Data</th>");
+        html.append("<th class='col-produto'>Produto</th>");
+        html.append("<th>Cidade</th>");
+        html.append("<th class='col-pequena'>Qtd</th>");
+        html.append("<th class='col-valor'>R$/Un</th>");
+        html.append("<th class='col-valor'>Frete</th>");
+        html.append("<th class='col-valor'>Desc</th>");
+        html.append("<th>Forma Pag</th>");
+        html.append("<th class='col-pequena'>Parc</th>");
+        html.append("<th>Loja</th>");
+        html.append("<th>Vendedor</th>");
+        html.append("<th>Comprador</th>");
+        html.append("<th>Lojista</th>");
+        html.append("<th class='col-valor'>Total</th>");
+        html.append("<th class='col-valor'>Custo</th>");
+        html.append("<th class='col-valor'>Lucro</th>");
         html.append("</tr>");
         html.append("</thead><tbody>");
-
+    
         for (Venda v : vendas) {
 
-            StringBuilder produtos = new StringBuilder();
-            StringBuilder quantidades = new StringBuilder();
-            StringBuilder valoresUnitarios = new StringBuilder();
+            String cidadeNome = (v.cidade != null && v.cidade.nome != null) ? v.cidade.nome : "-";
+            String foiNaLoja = (v.foiNaLoja != null && v.foiNaLoja) ? "<span class='badge badge-yes'>Sim</span>" : "<span class='badge badge-no'>Não</span>";
+            String tipoCliente = (v.clienteFinal != null && v.clienteFinal) ? "Cliente" : "Lojista";
+            String nomeLojista = (v.lojista != null && v.lojista.nome != null) ? v.lojista.nome : "-";
+            String parcelasStr = (v.parcelas != null && v.parcelas > 0) ? v.parcelas + "x" : "-";
+            String formaPagamento = v.formaPagamento != null ? v.formaPagamento.toString() : "-";
 
+            double custoTotalVenda = 0;
+        
             if (v.itens != null) {
-
-                for (ItemVenda i : v.itens) {
-
-                    String nomeProduto = "";
-
-                    if (i.produto != null) {
-                        nomeProduto = i.produto.nome;
+                custoTotalVenda = v.itens.stream().mapToDouble(i -> i.quantidade * (i.custoUnitario != null ? i.custoUnitario : 0)).sum();
+            }
+        
+            if (v.itens != null && !v.itens.isEmpty()) {
+                
+                boolean primeiroItem = true;
+                
+                for (ItemVenda item : v.itens) {
+                    
+                    String nomeProduto = item.produto != null ? item.produto.nome : "Produto";
+                    int quantidade = item.quantidade != null ? item.quantidade : 0;
+                    double precoUnitario = item.precoUnitario != null ? item.precoUnitario : 0;
+                    
+                    html.append("<tr>");
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(v.data != null ? v.data.format(fmt) : "-").append("</td>");
                     } else {
-                        nomeProduto = "Produto desconhecido";
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    html.append("<td>").append(nomeProduto).append("</td>");
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(cidadeNome).append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    html.append("<td class='col-pequena'>").append(quantidade).append("</td>");
+                    html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", precoUnitario)).append("</td>");
+                    
+                    if (primeiroItem) {
+                        html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorFrete != null ? v.valorFrete : 0)).append("</td>");
+                    } else {
+                        html.append("<td class='col-valor' style='background-color: #f5f5f5;'></td>");
                     }
 
-                    produtos.append(nomeProduto).append("<br>");
-                    quantidades.append(i.quantidade).append("<br>");
-                    valoresUnitarios.append("R$ ").append(String.format("%.2f", i.precoUnitario != null ? i.precoUnitario : 0)).append("<br>");
+                    if (primeiroItem) {
+                        html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorDesconto != null ? v.valorDesconto : 0)).append("</td>");
+                    } else {
+                        html.append("<td class='col-valor' style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(formaPagamento).append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td class='col-pequena'>").append(parcelasStr).append("</td>");
+                    } else {
+                        html.append("<td class='col-pequena' style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(foiNaLoja).append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(v.vendedor != null ? v.vendedor : "-").append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+
+                    if (primeiroItem) {
+                        html.append("<td>").append(tipoCliente).append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td>").append(nomeLojista).append("</td>");
+                    } else {
+                        html.append("<td style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    if (primeiroItem) {
+                        html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorTotal != null ? v.valorTotal : 0)).append("</td>");
+                    } else {
+                        html.append("<td class='col-valor' style='background-color: #f5f5f5;'></td>");
+                    }
+
+                    if (primeiroItem) {
+                        html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", custoTotalVenda)).append("</td>");
+                    } else {
+                        html.append("<td class='col-valor' style='background-color: #f5f5f5;'></td>");
+                    }
+
+                    if (primeiroItem) {
+                        double lucroTotalVenda = (v.valorTotal != null ? v.valorTotal : 0) - custoTotalVenda;
+                        html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", lucroTotalVenda)).append("</td>");
+                    } else {
+                        html.append("<td class='col-valor' style='background-color: #f5f5f5;'></td>");
+                    }
+                    
+                    html.append("</tr>");
+                    
+                    primeiroItem = false;
 
                 }
+
+            } else {
+
+                html.append("<tr>");
+                html.append("<td>").append(v.data != null ? v.data.format(fmt) : "-").append("</td>");
+                html.append("<td>-</td>");
+                html.append("<td>").append(cidadeNome).append("</td>");
+                html.append("<td class='col-pequena'>-</td>");
+                html.append("<td class='col-valor'>-</td>");
+                html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorFrete != null ? v.valorFrete : 0)).append("</td>");
+                html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorDesconto != null ? v.valorDesconto : 0)).append("</td>");
+                html.append("<td>").append(formaPagamento).append("</td>");
+                html.append("<td class='col-pequena'>").append(parcelasStr).append("</td>");
+                html.append("<td>").append(foiNaLoja).append("</td>");
+                html.append("<td>").append(v.vendedor != null ? v.vendedor : "-").append("</td>");
+                html.append("<td>").append(tipoCliente).append("</td>");
+                html.append("<td>").append(nomeLojista).append("</td>");
+                html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", v.valorTotal != null ? v.valorTotal : 0)).append("</td>");
+                html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", custoTotalVenda)).append("</td>");
+               
+                double lucroTotalVenda = (v.valorTotal != null ? v.valorTotal : 0) - custoTotalVenda;
+               
+                html.append("<td class='col-valor'>R$ ").append(String.format("%.2f", lucroTotalVenda)).append("</td>");
+                html.append("</table>");
+
             }
-
-            String foiNaLoja = (v.foiNaLoja != null && v.foiNaLoja) ? "<span class='badge badge-yes'>Sim</span>" : "<span class='badge badge-no'>Não</span>";
-            String tipoCliente = (v.clienteFinal != null && v.clienteFinal) ? "Cliente Final" : "Lojista";
-            String nomeLojista = (v.lojista != null && v.lojista.nome != null) ? v.lojista.nome : "-";
-            String cidadeNome = (v.cidade != null && v.cidade.nome != null) ? v.cidade.nome : "-";
-            String parcelasStr = (v.parcelas != null && v.parcelas > 0) ? v.parcelas + "x" : "-";
-
-            html.append("<tr>");
-            html.append("<td>").append(v.id).append("</td>");
-            html.append("<td>").append(v.data != null ? v.data.format(fmt) : "-").append("</td>");
-            html.append("<td>").append(produtos.toString()).append("</td>");
-            html.append("<td>").append(cidadeNome).append("</td>");
-            html.append("<td>").append(quantidades.toString()).append("</td>");
-            html.append("<td>").append(valoresUnitarios.toString()).append("</td>");
-            html.append("<td>R$ ").append(String.format("%.2f", v.valorFrete != null ? v.valorFrete : 0)).append("</td>");
-            html.append("<td>R$").append(String.format("%.2f", v.valorDesconto != null ? v.valorDesconto : 0)).append("</td>");
-            html.append("<td>").append(v.formaPagamento != null ? v.formaPagamento : "-").append("</td>");
-            html.append("<td>").append(parcelasStr).append("</td>");
-            html.append("<td>R$ ").append(String.format("%.2f", v.valorTotal != null ? v.valorTotal : 0)).append("</td>");
-            html.append("<td>").append(foiNaLoja).append("</td>");
-            html.append("<td>").append(v.vendedor != null ? v.vendedor : "-").append("</td>");
-            html.append("<td>").append(tipoCliente).append("</td>");
-            html.append("<td>").append(nomeLojista).append("</td>");
-
-            double custo = 0;
-
-            if (v.itens != null) {
-                custo = v.itens.stream().mapToDouble(i -> i.quantidade * (i.custoUnitario != null ? i.custoUnitario : 0)).sum();
-            }
-
-            html.append("<td>R$ ").append(String.format("%.2f", custo)).append("</td>");
-            html.append("<td>R$ ").append(String.format("%.2f", v.lucroBruto != null ? v.lucroBruto : 0)).append("</td>");
-            html.append("</tr>");
-        
         }
-
+        
         html.append("</tbody>");
         html.append("</table>");
-
+    
         html.append("<div class='footer'>");
-        html.append("Programa de Gestão - Desenvolvido por Ravi Soares");
+        html.append("Programa de gestão - Desenvolvido por Ravi Soares");
         html.append("</div>");
         html.append("</div>");
         html.append("</body></html>");
-
+    
         return html.toString();
-
-    } 
+    
+    }
 
     private static class TotalResponse {
 

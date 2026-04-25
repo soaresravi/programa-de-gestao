@@ -9,6 +9,7 @@ import ModalNovaVenda from './components/ModalNovaVenda';
 import ModalVendaDetalhes from './ModalVendaDetalhes';
 import api from '../../services/api';
 import styles from './Vendas.module.scss';
+import ModalEportarPDF from '../../components/ModalExportarPDF';
 
 const Vendas = ({ addToast }) => {
 
@@ -31,6 +32,7 @@ const Vendas = ({ addToast }) => {
   const [vendedoresOriginal, setVendedoresOriginal] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalDetalhesAberto, setModalDetalhesAberto] = useState(false);
+  const [modalExportarAberto, setModalExportarAberto] = useState(false);
   const [vendaSelecionadaId, setVendaSelecionadaId] = useState(null);
   const calendarioRef = useRef(null);
 
@@ -159,10 +161,12 @@ const Vendas = ({ addToast }) => {
   const vendasExibidas = vendas?.content || [];
 
   useEffect(() => {
-    if (vendasExibidas.length > 0 && vendedoresOriginal.length === 0) {
+   
+    if (vendasExibidas.length > 0) {
       const vendedoresUnicos = [...new Set(vendasExibidas.map(v => v.vendedor).filter(Boolean))];
       setVendedoresOriginal(vendedoresUnicos);
     }
+  
   }, [vendasExibidas]);
 
   const totalVendas = vendasExibidas.reduce((acc, v) => acc + (v.valorTotal || 0), 0);
@@ -232,7 +236,7 @@ const Vendas = ({ addToast }) => {
         </div>
 
         <div className={styles.headerButtons}>
-          <button className={styles.exportBtn}> Exportar para PDF </button>
+          <button className={styles.exportBtn} onClick={() => setModalExportarAberto(true)}> Exportar para PDF </button>
           <button className={styles.novaVendaBtn} onClick={() => setShowModal(true)}> <Plus size={20} strokeWidth={4} /> Nova venda </button>
         </div>
         
@@ -284,7 +288,7 @@ const Vendas = ({ addToast }) => {
                 <div className={styles.calendarioTrigger} onClick={() => setMostrarCalendario(!mostrarCalendario)}>
                 
                   <Calendar size={18} strokeWidth={2.5} />
-                  <span> {dataPersonalizadaInicio && dataPersonalizadaFim ? `${new Date(dataPersonalizadaInicio).toLocaleDateString('pt-BR')} - ${new Date(dataPersonalizadaFim).toLocaleDateString('pt-BR')}` : 'Selecione as datas'} </span>
+                  <span> {dataPersonalizadaInicio && dataPersonalizadaFim ? `${dataPersonalizadaInicio.split('-').reverse().join('/')} - ${dataPersonalizadaFim.split('-').reverse().join('/')}` : 'Selecione as datas'} </span>
                 
                   {(dataPersonalizadaInicio || dataPersonalizadaFim) && (
                  
@@ -360,12 +364,16 @@ const Vendas = ({ addToast }) => {
                   
                   <tr key={venda.id}>
                     
-                    <td> {(() => {
-                      if (!venda.data) return '-';
-                      const [ano, mes, dia] = venda.data.split('-');
-                      return `${dia}/${mes}/${ano}`;
-                    })()}</td>
-                   
+                    <td> 
+
+                      {(() => {
+                        if (!venda.data) return '-';
+                        const [ano, mes, dia] = venda.data.split('-');
+                        return `${dia}/${mes}/${ano}`;
+                      })()}
+
+                    </td>
+
                     <td className={styles.produtoLink} onClick={() => handleAbrirDetalhes(venda.id)}>
                       
                       {(() => {
@@ -410,7 +418,9 @@ const Vendas = ({ addToast }) => {
         </div>
       </div>      
     </div>
-    
+
+    <ModalEportarPDF isOpen={modalExportarAberto}onClose={() => setModalExportarAberto(false)} addToast={addToast} />
+
     <ModalVendaDetalhes isOpen={modalDetalhesAberto}
     onClose={() => {
       setModalDetalhesAberto(false);

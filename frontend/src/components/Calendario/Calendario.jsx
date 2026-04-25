@@ -5,8 +5,8 @@ import styles from './Calendario.module.scss';
 const Calendario = ({ dataInicio, dataFim, onSelect, onClose }) => {
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [tempInicio, setTempInicio] = useState(dataInicio ? new Date(dataInicio) : null);
-  const [tempFim, setTempFim] = useState(dataFim ? new Date(dataFim) : null);
+  const [tempInicio, setTempInicio] = useState(dataInicio ? new Date(dataInicio + 'T00:00:00') : null);
+  const [tempFim, setTempFim] = useState(dataFim ? new Date(dataFim + 'T00:00:00') : null);
   const [selecionandoFim, setSelecionandoFim] = useState(false);
 
   const diasDaSemana = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
@@ -43,22 +43,25 @@ const Calendario = ({ dataInicio, dataFim, onSelect, onClose }) => {
 
   const handleDateClick = (date) => {
 
+    const dataSemTimezone = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
     if (!selecionandoFim) {
             
-      setTempInicio(date);
+      setTempInicio(dataSemTimezone);
       setTempFim(null);
       setSelecionandoFim(true);
         
     } else {
 
-      if (date < tempInicio) {
-        setTempInicio(date);
+      if (dataSemTimezone < tempInicio) {
+        setTempInicio(dataSemTimezone);
         setTempFim(null);
       } else {
-        setTempFim(date);
-        onSelect(tempInicio, date);
-        setSelecionandoFim(false);
+        setTempFim(dataSemTimezone);
+        onSelect(tempInicio, dataSemTimezone);
       }
+
+      setSelecionandoFim(false);
 
     }
   };
