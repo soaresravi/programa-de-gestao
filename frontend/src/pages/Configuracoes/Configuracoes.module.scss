@@ -52,6 +52,7 @@
 }
 
 .formGroup {
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -65,6 +66,7 @@
   }
   
   input {
+   
     background-color: $verde-claro;
     border: none;
     border-radius: 8px;
@@ -76,6 +78,11 @@
       outline: none;
       box-shadow: $sombra-card;
     }
+
+    &::placeholder {
+      color: $verde-escuro-textos;
+    }
+    
   }
 }
 
@@ -96,6 +103,7 @@
 }
 
 .editBtn {
+  
   background-color: transparent;
   border: 2px solid $verde-principal;
   color: $verde-principal;
@@ -109,9 +117,11 @@
   &:hover {
     background-color: rgba($verde-principal, 0.1);
   }
+
 }
 
 .saveBtn {
+  
   display: flex;
   align-items: center;
   gap: 6px;
@@ -133,9 +143,11 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
+
 }
 
 .cancelBtn {
+
   background-color: transparent;
   border: 1px solid $cinza-detalhe;
   color: $verde-titulos;
@@ -149,9 +161,11 @@
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
+
 }
 
 .changePasswordBtn {
+
   background-color: transparent;
   border: 2px solid $verde-titulos;
   color: $verde-titulos;
@@ -166,9 +180,11 @@
   &:hover {
     background-color: rgba($verde-titulos, 0.1);
   }
+
 }
 
 .passwordWrapper {
+
   position: relative;
   display: flex;
   align-items: center;
@@ -177,9 +193,11 @@
     flex: 1;
     padding-right: 40px;
   }
+
 }
 
 .eyeButton {
+
   position: absolute;
   right: 12px;
   background: none;
@@ -193,9 +211,11 @@
   &:hover {
     color: $verde-titulos;
   }
+
 }
 
 .logoutBtn {
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -215,9 +235,11 @@
   &:hover {
     background-color: $verde-escuro-textos;
   }
+
 }
 
 .deleteBtn {
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,9 +258,9 @@
   &:hover {
     background-color: rgba(220, 38, 38, 0.1);
   }
+
 }
 
-/* Modal */
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -276,6 +298,7 @@
 }
 
 .modalClose {
+
   background: none;
   border: none;
   cursor: pointer;
@@ -287,6 +310,7 @@
   &:hover {
     color: $verde-titulos;
   }
+
 }
 
 .divider {
@@ -320,6 +344,7 @@
 }
 
 .cancelarBtn {
+
   background-color: transparent;
   border: 1px solid $verde-titulos;
   border-radius: 50px;
@@ -333,9 +358,11 @@
   &:hover {
     background-color: rgba($verde-titulos, 0.1);
   }
+
 }
 
 .confirmarBtn {
+  
   background-color: $verde-principal;
   color: $branco;
   border: none;
@@ -354,9 +381,11 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
+
 }
 
 .deleteConfirmBtn {
+  
   background-color: #dc2626;
   color: $branco;
   border: none;
@@ -375,4 +404,5 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
+
 }

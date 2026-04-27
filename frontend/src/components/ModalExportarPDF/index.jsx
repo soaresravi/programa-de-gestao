@@ -5,7 +5,7 @@ import Calendario from '../Calendario/Calendario';
 import api from '../../services/api';
 import styles from './ModalExportarPDF.module.scss';
 
-const ModalEportarPDF = ({ isOpen, onClose, addToast }) => {
+const ModalEportarPDF = ({ isOpen, onClose, addToast, tipo, apiUrl }) => {
 
     const [periodoPreset, setPeriodoPreset] = useState('mes');
     const [dataPersonalizadaInicio, setDataPersonalizadaInicio] = useState('');
@@ -87,15 +87,16 @@ const ModalEportarPDF = ({ isOpen, onClose, addToast }) => {
                 return;
             }
 
-            const response = await api.post('/vendas/exportar-pdf', null, {
-                
-                params: { 
-                    dataInicio: dataInicioFinal, 
-                    dataFim: dataFimFinal 
-                },
-                
-                responseType: 'blob'
+            const apiEndpoint = apiUrl || '/vendas/exportar-pdf';
+            const params = { dataInicio: dataInicioFinal, dataFim: dataFimFinal };
 
+            if (tipo) {
+                params.tipo = tipo;
+            }
+
+            const response = await api.post(apiEndpoint, null, {
+                params: params,
+                responseType: 'blob'
             });
             
             const blob = new Blob([response.data], { type: 'application/pdf' });

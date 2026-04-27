@@ -12,10 +12,14 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 @Path("/despesas")
 @RolesAllowed("user")
@@ -58,7 +62,7 @@ public class DespesaResource {
             dataFim = LocalDate.now();
         }
 
-        StringBuilder query = new StringBuilder("tipo = ?1 and dataVencimento between ?2 and ?3");
+        StringBuilder query = new StringBuilder("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null)");
         List<Object> params = new ArrayList<>();
 
         params.add(tipo);
@@ -97,7 +101,7 @@ public class DespesaResource {
             dataFim = LocalDate.now();
         }
 
-        StringBuilder query = new StringBuilder("tipo = ?1 and dataVencimento between ?2 and ?3");
+        StringBuilder query = new StringBuilder("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null");
         List<Object> params = new ArrayList<>();
 
         params.add(tipo);
@@ -183,84 +187,183 @@ public class DespesaResource {
     @Path("/exportar-pdf")
     @Produces("application/pdf")
 
-    public Response exportarPDF(@QueryParam("tipo") String tipo, @QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim) {
+    public Response exportarPDF(@QueryParam("tipo") String tipo, @QueryParam("dataInicio") String dataInicioStr, @QueryParam("dataFim") String dataFimStr) {
 
-        if (dataInicio == null) {
-            dataInicio = LocalDate.now().withDayOfMonth(1);
+        try {
+
+            if (tipo == null || tipo.isEmpty()) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Tipo é obrigatório").build();
+            }
+
+            LocalDate dataInicio, dataFim;
+
+            if (dataInicioStr != null && !dataInicioStr.isEmpty()) {
+                dataInicio = LocalDate.parse(dataInicioStr);
+            } else {
+                dataInicio = LocalDate.now().withDayOfMonth(1);
+            }
+    
+            if (dataFimStr != null && !dataFimStr.isEmpty()) {
+                dataFim = LocalDate.parse(dataFimStr);
+            } else {
+                dataFim = LocalDate.now();
+            }
+
+            List <Despesa> despesas = Despesa.find("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null) order by id desc", tipo, dataInicio, dataFim).list();
+            String html = gerarHtmlRelatorio(despesas, tipo, dataInicio, dataFim);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ITextRenderer renderer = new ITextRenderer();
+            
+            renderer.setDocumentFromString(html);
+            renderer.layout();
+            renderer.createPDF(byteArrayOutputStream);
+
+            byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+
+            String filename = "relatorio_despesas_" + tipo.toLowerCase() + "_" + dataInicio.toString() + "_a_" + dataFim.toString() + ".pdf";
+            return Response.ok(pdfBytes).type("application/pdf").header("Content-Disposition", "attachment; filename=" + filename).build();
+
+        } catch (DateTimeParseException error) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Formato de data inválido. Use YYYY-MM-DD").build();
+        } catch (Exception error) {
+            error.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao gerar PDF: " + error.getMessage()).build();
         }
-
-        if (dataFim == null) {
-            dataFim = LocalDate.now();
-        }
-
-        List<Despesa> despesas = Despesa.find("tipo = ?1 and dataVencimento between ?2 and ?3 order by id desc", tipo, dataInicio, dataFim).list();
-        String html = gerarHtmlRelatorio(despesas, tipo, dataInicio, dataFim);
-        
-        return Response.ok(html).type(MediaType.TEXT_HTML).build();
-
     }
 
     private String gerarHtmlRelatorio(List<Despesa> despesas, String tipo, LocalDate dataInicio, LocalDate dataFim) {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         double totalValor = despesas.stream().mapToDouble(d -> d.valor != null ? d.valor : 0).sum();
-
+        
+        long totalPendentes = despesas.stream().filter(d -> d.status == StatusDespesa.PENDENTE).count();
+        long totalPagas = despesas.stream().filter(d -> d.status == StatusDespesa.PAGO).count();
+        long totalAtrasadas = despesas.stream().filter(d -> d.status == StatusDespesa.ATRASADO).count();
+    
         StringBuilder html = new StringBuilder();
         
         html.append("<!DOCTYPE html>");
         html.append("<html><head>");
-        html.append("<meta charset='UTF-8'>");
-        html.append("<title>Relatório de despesas</title>");
+        html.append("<meta charset='UTF-8' />");
+        
         html.append("<style>");
-        html.append("body { font-family: 'Segoe UI', Arial, sans-serif; margin: 30px; background: #f5f5f5; }");
-        html.append(".container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }");
-        html.append("h1 { color: #14532d; border-left: 5px solid #22c55e; padding-left: 20px; }");
-        html.append("h2 { color: #166534; font-size: 18px; margin-top: 0; }");
-        html.append(".header-info { background: #f0fdf4; padding: 15px; border-radius: 8px; margin-bottom: 20px; }");
-        html.append("table { width: 100%; border-collapse: collapse; margin-top: 20px; }");
-        html.append("th { background-color: #14532d; color: white; padding: 12px; text-align: left; }");
-        html.append("td { border: 1px solid #ddd; padding: 8px; }");
+        html.append("@page { size: portrait; margin: 0.8cm; }");
+        html.append("body { font-family: Helvetica, Times New Roman; font-size: 11px; color: #333; margin: 0; }");
+        html.append(".container { width: 100%; }");
+        
+        html.append("h1 { color: #000000; font-weight: bold; font-size: 16px; margin: 0 0 5px 0; }");
+        html.append("h2 { color: #166534; font-size: 13px; margin: 0 0 10px 0; }");
+        
+        html.append(".header-info { width: 100%; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; display: flex; justify-content: space-between; }");
+        
+        html.append(".summary-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }");
+        html.append(".summary-card { background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px; text-align: center; }");
+        html.append(".summary-card h3 { margin: 0; font-size: 10px; color: #166534; text-transform: uppercase; }");
+        html.append(".summary-card .value { font-size: 14px; font-weight: bold; color: #14532d; }");
+        
+        html.append(".badge { padding: 1px 4px; border-radius: 4px; font-size: 8px; font-weight: bold; display: inline-block; }");
+        html.append(".badge-pago { background: #dcfce7; color: #166534; }");
+        html.append(".badge-pendente { background: #fef3c7; color: #92400e; }");
+        html.append(".badge-atrasado { background: #fee2e2; color: #991b1b; }");
+        
+        html.append("table { width: 100%; border-collapse: collapse; font-size: 9px; table-layout: auto; }");
+        html.append("th { background-color: #14532d; color: white; padding: 6px 4px; text-align: left; }");
+        html.append("td { border: 1px solid #e5e7eb; padding: 5px 4px; vertical-align: top; }");
         html.append("tr:nth-child(even) { background-color: #f9fafb; }");
-        html.append(".total { margin-top: 20px; font-size: 18px; font-weight: bold; text-align: right; }");
-        html.append(".footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }");
+        
+        html.append(".footer { margin-top: 20px; text-align: center; font-size: 8px; color: #6b7280; }");
+        
+        html.append(".col-valor { text-align: right; }");
+        html.append("td.col-valor { text-align: right; }");
+        
         html.append("</style>");
         html.append("</head><body>");
         html.append("<div class='container'>");
-
-        html.append("<h1>PROGRAMA DE GESTÃO - DAVID COLCHÕES</h1>");
-        html.append("<h2> Relatório de despesas - ").append(tipo.equals("CASA") ? "Casa" : "Loja").append("</h2>");
-
+        
+        html.append("<h1> Programa de Gestão - David Colchões </h1>");
+        html.append("<h2>Relatório de despesas - ").append(tipo.equals("CASA") ? "Casa" : "Loja").append("</h2>");
+        
         html.append("<div class='header-info'>");
-        html.append("<div><strong> Período: </strong> ").append(dataInicio.format(fmt)).append(" a ").append(dataFim.format(fmt)).append("</div>");
-        html.append("<div><strong> Gerado em: </strong>").append(LocalDate.now().format(fmt)).append("</div>");
+        html.append("<div><strong>Período:</strong> ").append(dataInicio.format(fmt)).append(" a ").append(dataFim.format(fmt)).append("</div>");
+        html.append("<div><strong>Gerado em:</strong> ").append(LocalDate.now().format(fmt)).append("</div>");
         html.append("</div>");
 
-        html.append("  \n");
-        html.append("<table>");
-        html.append("<thead>\n");
+        html.append("<table class='summary-table'>");
         html.append("<tr>");
-        html.append("<th>Nome</th><th>Valor</th><th>Data Pagamento</th><th>Data Vencimento</th><th>Status</th>");
+        html.append("<td class='summary-card' width='25%'><h3>Total</h3><div class='value'>R$ ").append(String.format("%,.2f", totalValor)).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Pagas</h3><div class='value'>").append(totalPagas).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Pendentes</h3><div class='value'>").append(totalPendentes).append("</div></td>");
+        html.append("<td class='summary-card' width='25%'><h3>Atrasadas</h3><div class='value'>").append(totalAtrasadas).append("</div></td>");
         html.append("</tr>");
-        html.append("</thead><tbody>");
-
-        for (Despesa d : despesas) {
-            html.append("<tr>");
-            html.append("<td>").append(d.nome != null ? d.nome : "-").append("</td>");
-            html.append("<td>R$ ").append(String.format("%,.2f", d.valor != null ? d.valor : 0)).append("</td>");
-            html.append("<td>").append(d.dataPagamento != null ? d.dataPagamento.format(fmt) : "-").append("</td>");
-            html.append("<td>").append(d.dataVencimento != null ? d.dataVencimento.format(fmt) : "-").append("</td>");
-            html.append("<td>").append(d.status != null ? d.status : "-").append("</td>");
-            html.append("</tr>");
+        html.append("</table>");
+       
+        html.append("<table>"); 
+        html.append("<thead>");
+        html.append("<tr>");
+        html.append("<th>Nome</th>");
+        html.append("<th class='col-valor'>Valor</th>");
+        html.append("<th>Data Pagamento</th>");
+        html.append("<th>Data Vencimento</th>");
+        html.append("<th>Status</th>");
+       
+        if (tipo.equals("LOJA")) {
+            html.append("<th>Fornecedor</th>");
         }
 
+        html.append("</tr>");
+        html.append("</thead><tbody>");
+        
+        for (Despesa d : despesas) {
+            
+            String badgeClass = "";
+            String statusText = "";
+            
+            if (d.status != null) {
+               
+                switch (d.status) {
+                   
+                    case PAGO:
+                        badgeClass = "badge-pago";
+                        statusText = "Pago";
+                        break;
+                    case PENDENTE:
+                        badgeClass = "badge-pendente";
+                        statusText = "Pendente";
+                        break;
+                    case ATRASADO:
+                        badgeClass = "badge-atrasado";
+                        statusText = "Atrasado";
+                        break;
+                }
+
+            }
+            
+            html.append("<tr>");
+            html.append("<td>").append(d.nome != null ? d.nome : "-").append("</td>");
+            html.append("<td class='col-valor'>R$ ").append(String.format("%,.2f", d.valor != null ? d.valor : 0)).append("</td>");
+            html.append("<td>").append(d.dataPagamento != null ? d.dataPagamento.format(fmt) : "-").append("</td>");
+            html.append("<td>").append(d.dataVencimento != null ? d.dataVencimento.format(fmt) : "-").append("</td>");
+            html.append("<td><span class='badge ").append(badgeClass).append("'>").append(statusText).append("</span></td>");
+           
+            if (tipo.equals("LOJA")) {
+                html.append("<td>").append(d.fornecedor != null && d.fornecedor ? "Sim" : "Não").append("</td>");
+            }
+
+            html.append("</tr>");
+            
+        }
+        
         html.append("</tbody>");
         html.append("</table>");
-        html.append("<div class='total'> Total: R$ ").append(String.format("%,.2f", totalValor)).append("</div>");
-        html.append("<div class='footer'> Programa de gestão - Desenvolvido por Ravi Soares </div>");
-        html.append("</div></body></html>");
-
+        
+        html.append("<div class='footer'>");
+        html.append("Programa de gestão - Desenvolvido por Ravi Soares");
+        html.append("</div>");
+        html.append("</div>");
+        html.append("</body></html>");
+        
         return html.toString();
-
     }
 
     private static class TotalResponse {

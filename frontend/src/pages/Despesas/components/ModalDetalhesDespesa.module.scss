@@ -1,0 +1,271 @@
+@use '../../../styles/variables' as *;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 500px;
+  max-width: 90%;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -10px;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+}
+
+.modalClose {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #919191;
+  
+  &:hover {
+    color: $verde-titulos;
+  }
+
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.modalContent {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formRow {
+
+  display: flex;
+  gap: 16px;
+  
+  > * {
+    flex: 1;
+  }
+
+}
+
+.formGroupCheckbox {
+  
+  display: flex;
+  align-items: center;
+  margin-top: 24px;
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: $verde-escuro-textos;
+    cursor: pointer;
+  }
+  
+  input[type="checkbox"] {
+   
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid $verde-titulos;
+    border-radius: 50%;
+    background: $branco;
+    cursor: pointer;
+    position: relative;
+    
+    &:checked {
+      
+      background-color: $verde-titulos;
+      border-color: $verde-titulos;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: $branco;
+      }
+
+    }
+
+  }
+}
+
+.formGroup {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $verde-escuro-textos;
+    font-family: $fonte-principal;
+  }
+  
+  input, select {
+   
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($verde-titulos, 0.3);
+    }
+
+  }
+}
+
+.infoValue {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: $preto;
+}
+
+.statusPago {
+  background-color: #10b981;
+  color: white;
+}
+
+.statusPendente {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.statusAtrasado {
+  background-color: #dc2626;
+  color: white;
+}
+
+.buttonRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.editButton {
+  
+  background: transparent;
+  border: 2px solid $verde-principal;
+  font-family: $fonte-principal;
+  color: $verde-principal;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-principal, 0.1);
+  }
+
+}
+
+.saveButton {
+  
+  background-color: $verde-principal;
+  font-family: $fonte-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
+}
+
+.deleteButton {
+ 
+  background-color: #dc2626;
+  color: $branco;
+  font-family: $fonte-principal;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #b91c1c;
+  }
+
+}
+
+.inputDisabled {
+  background-color: #e5e5e5 !important;
+  color: $preto;
+  cursor: not-allowed;
+}
+
+.checkboxWrapper {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-claro;
+  border-radius: 8px;
+  padding: 10px 12px;
+  
+  input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
+  }
+  
+  span {
+    font-size: 14px;
+    color: $preto;
+  }
+  
+}

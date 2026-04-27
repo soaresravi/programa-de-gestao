@@ -1,0 +1,414 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  font-family: $fonte-principal;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: $preto;
+  font-family: $fonte-principal;
+}
+
+.novaDespesaBtn {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+    transform: scale(1.02);
+  }
+
+}
+
+.tabelaContainer {
+  background-color: $verde-principal;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 24px;
+  width: auto;
+  min-width: auto;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.tabelaHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+  width: 100%;
+}
+
+.tabelaTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: $verde-escuro-textos;
+  font-family: $fonte-principal;
+  white-space: nowrap;
+}
+
+.searchBox {
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-claro;
+  border-radius: 20px;
+  padding: 6px 12px;
+  
+  input {
+
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    width: 180px;
+    
+    &::placeholder {
+      color: $verde-escuro-textos;
+    }
+
+  }
+}
+
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.filtrosEsquerda {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.filtroData {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $branco;
+  border-radius: 5px;
+  padding: 6px;
+  min-width: 160px;
+  
+  select {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    cursor: pointer;
+    min-width: 130px;
+  }
+
+  option {
+    background-color: $branco;
+    color: $preto;
+  }
+
+}
+
+.filtroSelect {
+  
+  background-color: $branco;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 5px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+}
+
+.filtroFornecedor {
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $branco;
+  border-radius: 50px;
+  padding: 4px 8px;
+  
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: $verde-escuro-textos;
+    cursor: pointer;
+  }
+  
+  input[type="checkbox"] {
+    
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid $verde-titulos;
+    border-radius: 50%;
+    background: $branco;
+    cursor: pointer;
+    position: relative;
+    
+    &:checked {
+      
+      background-color: $verde-titulos;
+      border-color: $verde-titulos;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: $branco;
+      }
+
+    }
+  }
+}
+
+.limparBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: $branco;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: $fonte-principal;
+  cursor: pointer;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  
+  width: auto;
+  border-collapse: collapse;
+  table-layout: auto;
+  
+  th {
+    text-align: left;
+    color: $verde-escuro-textos;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: $fonte-principal;
+    border-bottom: 1px solid rgba($branco, 0.3);
+    white-space: nowrap;
+    padding: 12px 20px;
+  }
+  
+  td {
+    padding: 12px 20px;
+    color: $branco;
+    font-size: 14px;
+    font-family: $fonte-principal;
+    border-bottom: 1px solid rgba($branco, 0.2);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+}
+
+.statusBadge {
+ 
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  
+  &.PAGO {
+    background-color: $verde-semi-escuro;
+    color: white;
+  }
+  
+  &.PENDENTE {
+    background-color: #f59e0b;
+    color: white;
+  }
+  
+  &.ATRASADO {
+    background-color: #dc2626;
+    color: white;
+  }
+
+}
+
+.tableFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.totalLabel {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $verde-escuro-textos;
+  font-weight: 700;
+  font-size: 16px;
+  position: absolute;
+  font-family: $fonte-principal;
+  left: 0;
+  
+  strong {
+    font-size: 18px;
+  }
+
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pageBtn {
+  
+  background: transparent;
+  border: 2px solid $branco;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  min-width: 32px;
+  min-height: 32px;
+  color: $branco;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    background-color: rgba($branco, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+}
+
+.pageInfo {
+  font-size: 14px;
+  font-family: $fonte-principal;
+  color: $branco;
+  background: transparent;
+}
+
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exportBtn {
+ 
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: $fonte-principal;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: rgba($verde-escuro-textos, 0.1);
+    transform: scale(1.02);
+  }
+
+}
+
+.calendarioWrapper {
+  position: relative;
+}
+
+.calendarioTrigger {
+ 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $branco;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  min-width: 220px;
+  justify-content: space-between;
+  
+  span {
+    font-size: 14px;
+    font-family: $fonte-principal;
+    color: $preto;
+    flex: 1;
+  }
+  
+}
+
+.calendarioDropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  z-index: 100;
+}
