@@ -39,14 +39,36 @@ const Despesas = ({ tipo, subtitle, addToast }) => {
   useEffect(() => {
     
     const buscarNomeUsuario = async () => {
-      
-      try {
-        const response = await api.get('/auth/me');
-        setUsuario({ nome: response.data.nome });
-      } catch (error) {
-        console.error("Erro ao buscar nome:", error);
-        setUsuario({ nome: 'Usuário' });
+
+      const nomeSalvo = localStorage.getItem('usuarioNome');
+
+      if (nomeSalvo && nomeSalvo !== 'Usuário') {
+        setUsuario({ nome: nomeSalvo });
+        return;
       }
+      
+      const token = localStorage.getItem('token');
+
+      if (token) {
+
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const nome = payload.nome || payload.upn?.split('@')[0] || 'Usuário';
+          setUsuario({ nome });
+          localStorage.setItem('usuarioNome', nome);
+          return;
+        } catch (error) {
+          console.error('Erro ao decodificar token', e);
+        }
+
+      }
+
+      api.get('/auth/me').then(response => {
+        setUsuario({ nome: response.data.nome });
+        localStorage.setItem('usuarioNome', response.data.nome);
+      }).catch(() => {
+        setUsuario({ nome: 'Usuário' });
+      });
 
     };
       

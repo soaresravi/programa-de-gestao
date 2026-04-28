@@ -67,7 +67,7 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Email ou senha inválidos").build();
         }
 
-        String token = Jwt.issuer("https://programa-de-gestao.com").upn(String.valueOf(usuario.id)).subject(String.valueOf(usuario.id)).groups(Set.of("user")).expiresIn(Duration.ofHours(8)).sign();
+        String token = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).subject(String.valueOf(usuario.id)).groups(Set.of("user")).claim("nome", usuario.nome).expiresIn(Duration.ofHours(8)).sign();
         String refreshToken = UUID.randomUUID().toString();
 
         RefreshToken rt = new RefreshToken();
@@ -98,7 +98,7 @@ public class AuthResource {
 
         Usuario usuario = Usuario.findById(rt.usuarioId);
 
-        String newToken = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).expiresIn(Duration.ofHours(8)).sign();
+        String newToken = Jwt.issuer("https://programa-de-gestao.com").upn(usuario.email).groups(Set.of("user")).subject(String.valueOf(usuario.id)).claim("nome", usuario.nome).expiresIn(Duration.ofHours(8)).sign();
         String newRefreshToken = UUID.randomUUID().toString();
 
         RefreshToken newRt = new RefreshToken();

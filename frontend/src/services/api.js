@@ -29,6 +29,18 @@ const processQueue = (error, token = null) => {
 
 };
 
+const extrairNomeToken = (token) => {
+
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.nome || payload.upn?.split('@')[0] || 'Usuário';
+    } catch (error) {
+        console.error('Erro ao extrair nome do token:', error);
+        return 'Usuário';
+    }
+
+};
+
 api.interceptors.request.use((config) => {
 
     const token = localStorage.getItem('token');
@@ -66,12 +78,16 @@ api.interceptors.response.use((response) => response, async (error) => {
 
             const refreshToken = localStorage.getItem('refreshToken');
             const response = await axios.post('http://localhost:8080/auth/refresh', { refreshToken });
+            const newToken = response.data.token;
 
-            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('token', newToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
 
-            processQueue(null, response.data.token);
-            originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
+            const nomeUsuario = extrairNomeToken(newToken);
+            localStorage.setItem('usuarioNome', nomeUsuario);
+
+            processQueue(null, newToken);
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
             return api(originalRequest);
 
@@ -81,6 +97,7 @@ api.interceptors.response.use((response) => response, async (error) => {
             
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('usuarioNome');
 
             window.location.href = '/login';
             return Promise.reject(refreshError);

@@ -39,14 +39,42 @@ const Configuracoes = ({ addToast, onLogout }) => {
         const fetch = async () => {
            
             try {
-               
-                const response = await api.get('/auth/me');
-               
-                if (isMounted) {
-                    setUsuario(response.data);
-                    setFormData({ nome: response.data.nome, email: response.data.email });
+
+                const token = localStorage.getItem('token');
+
+                let nome = null;
+                let email = null;
+
+                if (token) {
+
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        nome = payload.nome;
+                        email = payload.upn;
+                    } catch (error) {
+                        console.error('Erro ao decodificar token', error);
+                    }
+
                 }
-            
+
+                if (nome && email) {
+
+                    if (isMounted) {
+                        setUsuario({ nome, email });
+                        setFormData({ nome, email });
+                    }
+
+                } else {
+                    
+                    const response = await api.get('/auth/me');
+               
+                    if (isMounted) {
+                        setUsuario(response.data);
+                        setFormData({ nome: response.data.nome, email: response.data.email });
+                    }
+
+                }
+                
             } catch (error) {
 
                 if (isMounted && error.response?.status !== 401) {
