@@ -14,8 +14,16 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copia a pasta gerada pelo Quarkus no primeiro estágio
-COPY --from=build /app/target/quarkus-app/ /app/
+COPY --from=build /app/target/quarkus-app/lib/ /app/lib/
+COPY --from=build /app/target/quarkus-app/*.jar /app/
+COPY --from=build /app/target/quarkus-app/app/ /app/app/
+COPY --from=build /app/target/quarkus-app/quarkus/ /app/quarkus/
 
 EXPOSE 8080
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8080 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-CMD ["java", "-jar", "/app/quarkus-run.jar"]
+
+# Força o Quarkus a rodar como servidor web ativo
+ENV NODE_ENV=production
+ENV QUARKUS_HTTP_HOST=0.0.0.0
+ENV QUARKUS_HTTP_PORT=8080
+
+CMD ["java", "-jar", "quarkus-run.jar"]
