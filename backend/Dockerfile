@@ -2,10 +2,9 @@
 FROM maven:3.8.8-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Como o Render já entra na pasta backend (por causa do Root Directory),
-# nós copiamos os arquivos direto do diretório atual do build.
-COPY pom.xml .
-COPY src ./src
+# Copia os arquivos de dentro da pasta backend para o container
+COPY backend/pom.xml .
+COPY backend/src ./src
 
 # Executa o build do Maven
 RUN mvn clean package -DskipTests
