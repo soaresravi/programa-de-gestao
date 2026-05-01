@@ -9,21 +9,13 @@ COPY backend/src ./src
 # Executa o build do Maven
 RUN mvn clean package -DskipTests
 
-# Estágio 2: Execução da aplicação com Java 21
+# Estágio 2: Execução
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copia a pasta gerada pelo Quarkus no primeiro estágio
-COPY --from=build /app/target/quarkus-app/lib/ /app/lib/
-COPY --from=build /app/target/quarkus-app/*.jar /app/
-COPY --from=build /app/target/quarkus-app/app/ /app/app/
-COPY --from=build /app/target/quarkus-app/quarkus/ /app/quarkus/
+COPY --from=build /app/target/quarkus-app/ /app/
 
 EXPOSE 8080
 
-# Força o Quarkus a rodar como servidor web ativo
-ENV NODE_ENV=production
-ENV QUARKUS_HTTP_HOST=0.0.0.0
-ENV QUARKUS_HTTP_PORT=8080
-
-CMD ["java", "-jar", "quarkus-run.jar"]
+# Passa a porta do Render diretamente para o Quarkus
+CMD ["java", "-Dquarkus.http.bind-host=0.0.0.0", "-Dquarkus.http.port=8080", "-jar", "quarkus-run.jar"]
