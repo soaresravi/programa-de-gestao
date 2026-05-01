@@ -17,4 +17,5 @@ WORKDIR /app
 COPY --from=build /app/target/quarkus-app/ /app/
 
 EXPOSE 8080
-CMD ["java", "-jar", "quarkus-run.jar"]
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=8080 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+CMD ["java", "-jar", "/app/quarkus-run.jar"]
