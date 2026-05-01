@@ -1,23 +1,20 @@
+# Estágio 1: Build da aplicação usando Maven com Java 21
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-FROM openjdk:25-slim AS build-env
-WORKDIR /app
-
-COPY --from=build /usr/share/maven /usr/share/maven
-COPY --from=build /usr/bin/mvn /usr/bin/mvn
-
-RUN ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
-
+# Copia os arquivos de dentro da pasta backend para o container
 COPY backend/pom.xml .
 COPY backend/src ./src
 
+# Executa o build do Maven
 RUN mvn clean package -DskipTests
 
-FROM openjdk:25-slim
+# Estágio 2: Execução da aplicação com Java 21
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-COPY --from=build-env /app/target/quarkus-app/ /app/
+# Copia a pasta gerada pelo Quarkus no primeiro estágio
+COPY --from=build /app/target/quarkus-app/ /app/
 
 EXPOSE 8080
 CMD ["java", "-jar", "quarkus-run.jar"]
