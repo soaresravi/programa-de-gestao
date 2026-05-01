@@ -1,0 +1,58 @@
+@use '../../../styles/variables' as *;
+
+.alertasContainer {
+  background-color: #ffe3c8;
+  border-left: 4px solid #920000;
+  border-radius: 15px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: $sombra-botao;
+}
+
+.alertasHeader {
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #eb0000;
+  font-weight: 700;
+  color: $branco;
+  font-family: $fonte-principal;
+  
+  span {
+    flex: 1;
+    font-family: $fonte-principal;
+  }
+
+}
+
+.closeBtn {
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $branco;
+  
+  &:hover {
+    color: #78350f;
+  }
+  
+}
+
+.alertasList {
+  padding: 12px 16px;
+  font-size: 16px;
+  font-family: $fonte-principal;
+}
+
+.alertaHoje {
+  color: #dc2626;
+  font-family: $fonte-principal;
+  margin-bottom: 8px;
+}
+
+.alertaAmanha {
+  color: #d97706;
+  font-family: $fonte-principal;
+}

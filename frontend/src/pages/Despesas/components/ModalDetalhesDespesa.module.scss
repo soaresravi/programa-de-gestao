@@ -45,11 +45,17 @@
   border: none;
   cursor: pointer;
   color: #919191;
-  
-  &:hover {
-    color: $verde-titulos;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
 
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
 }
 
 .divider {

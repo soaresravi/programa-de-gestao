@@ -1,0 +1,37 @@
+@use '../../../styles/variables' as *;
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+
+  width: 100%;
+  border-collapse: collapse;
+  
+  th {
+    text-align: left;
+    padding: 10px 8px;
+    background-color: $verde-claro;
+    color: $verde-escuro-textos;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  
+  td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 13px;
+  }
+  
+  tr:hover {
+    background-color: rgba($verde-principal, 0.05);
+  }
+  
+}
+
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: $cinza-detalhe;
+}

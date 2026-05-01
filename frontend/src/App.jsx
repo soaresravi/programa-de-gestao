@@ -36,7 +36,7 @@ function App() {
           <Route path="/cadastro" element={<Cadastro />} /> 
           <Route path="/esqueci-senha" element={<EsqueciSenha />} />
 
-          <Route path="/" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" /> } />
+          <Route path="/" element={isAuthenticated ? <Dashboard addToast={addToast} /> : <Navigate to="/login" /> } />
           <Route path="/produtos" element={isAuthenticated ? <Produtos /> : <Navigate to="/login" /> } />
           <Route path="/vendas" element={isAuthenticated ? <Vendas addToast={addToast} /> : <Navigate to="/login" />} />
           <Route path="/cidades" element={isAuthenticated ? <Cidades addToast={addToast} /> : <Navigate to="/login" /> } />

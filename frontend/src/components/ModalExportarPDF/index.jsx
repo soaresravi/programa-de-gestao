@@ -5,7 +5,7 @@ import Calendario from '../Calendario/Calendario';
 import api from '../../services/api';
 import styles from './ModalExportarPDF.module.scss';
 
-const ModalEportarPDF = ({ isOpen, onClose, addToast, tipo, apiUrl }) => {
+const ModalEportarPDF = ({ isOpen, onClose, addToast, tipo, apiUrl, dataInicio, dataFim }) => {
 
     const [periodoPreset, setPeriodoPreset] = useState('mes');
     const [dataPersonalizadaInicio, setDataPersonalizadaInicio] = useState('');
@@ -19,10 +19,16 @@ const ModalEportarPDF = ({ isOpen, onClose, addToast, tipo, apiUrl }) => {
     const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
     const primeiroDiaAno = new Date(hoje.getFullYear(), 0, 1);
     const trintaDiasAtras = new Date(hoje);
+    const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
 
     trintaDiasAtras.setDate(hoje.getDate() - 30);
 
-    const formatarData = (date) => date.toISOString().split('T')[0];
+    const formatarData = (date) => {
+        const ano = date.getFullYear();
+        const mes = String(date.getMonth() + 1).padStart(2, '0');
+        const dia = String(date.getDate()).padStart(2, '0');
+        return `${ano}-${mes}-${dia}`;
+    };
 
     const ajustarData = (date) => {
         if (!date) return '';
@@ -57,8 +63,15 @@ const ModalEportarPDF = ({ isOpen, onClose, addToast, tipo, apiUrl }) => {
                 switch (periodoPreset) {
                     
                     case 'mes':
+                        
                         dataInicioFinal = formatarData(primeiroDiaMes);
-                        dataFimFinal = formatarData(hoje);
+                        
+                        if (apiUrl && (apiUrl.includes('dashboard') || apiUrl.includes('despesas'))) {
+                            dataFimFinal = formatarData(ultimoDiaMes);
+                        } else {
+                            dataFimFinal = formatarData(hoje);
+                        }
+
                         break;
                    
                     case 'ultimos30':

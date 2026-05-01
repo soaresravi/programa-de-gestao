@@ -33,61 +33,57 @@ const Configuracoes = ({ addToast, onLogout }) => {
     });
 
     useEffect(() => {
-        
+       
         let isMounted = true;
         
         const fetch = async () => {
-           
+            
             try {
-
+                
+                const nomeSalvo = localStorage.getItem('usuarioNome');
                 const token = localStorage.getItem('token');
-
-                let nome = null;
-                let email = null;
-
+                
+                let emailToken = null;
+    
                 if (token) {
-
+                    
                     try {
+                        
                         const payload = JSON.parse(atob(token.split('.')[1]));
-                        nome = payload.nome;
-                        email = payload.upn;
+                        emailToken = payload.upn;
+                
+                        if (!nomeSalvo && isMounted) {
+                            setUsuario({ nome: payload.nome, email: emailToken });
+                            setFormData({ nome: payload.nome, email: emailToken });
+                        }
+
                     } catch (error) {
                         console.error('Erro ao decodificar token', error);
                     }
 
                 }
 
-                if (nome && email) {
-
-                    if (isMounted) {
-                        setUsuario({ nome, email });
-                        setFormData({ nome, email });
-                    }
-
-                } else {
-                    
-                    const response = await api.get('/auth/me');
-               
-                    if (isMounted) {
-                        setUsuario(response.data);
-                        setFormData({ nome: response.data.nome, email: response.data.email });
-                    }
-
+                const response = await api.get('/auth/me');
+                
+                if (isMounted) {
+                    const dadosFrestos = response.data;
+                    setUsuario(dadosFrestos);
+                    setFormData({ nome: dadosFrestos.nome, email: dadosFrestos.email });
+                    localStorage.setItem('usuarioNome', dadosFrestos.nome);
                 }
                 
             } catch (error) {
-
+                
                 if (isMounted && error.response?.status !== 401) {
                     addToast('Erro ao carregar dados', 'error');
                 }
 
             }
-
         };
     
         fetch();
         return () => { isMounted = false; };
-
+        
     }, []);
 
     const handleEdit = () => {
@@ -115,6 +111,8 @@ const Configuracoes = ({ addToast, onLogout }) => {
                 email: formData.email
             });
 
+            localStorage.setItem('usuarioNome', formData.nome);
+            
             addToast('Perfil atualizado com sucesso!', 'success');
             setUsuario({ ...usuario, nome: formData.nome, email: formData.email });
             setIsEditing(false);
@@ -301,7 +299,7 @@ const Configuracoes = ({ addToast, onLogout }) => {
                     
                         <div className={styles.passwordWrapper}>
                             <input type={showNovaSenha ? 'text' : 'password'} placeholder="Digite a nova senha (mínimo 6 caracteres)" value={senhaData.novaSenha} onChange={(e) => setSenhaData({ ...senhaData, novaSenha: e.target.value })} />
-                            <button type="button" className={styles.eyeButton} onClick={() => setShowNovaSenha(!showNovaSenha)}> {showNovaSenha ? <EyeOff size={18} /> : <Eye size={18} />} </button>
+                            <button type="button" className={styles.eyeButton} onClick={() => setShowNovaSenha(!showNovaSenha)}> {showNovaSenha ? <EyeClosed size={18} /> : <Eye size={18} />} </button>
                         </div>
 
                     </div>
@@ -312,7 +310,7 @@ const Configuracoes = ({ addToast, onLogout }) => {
                     
                         <div className={styles.passwordWrapper}>     
                             <input type={showConfirmarSenha ? 'text' : 'password'} placeholder="Confirme a nova senha" value={senhaData.confirmarSenha} onChange={(e) => setSenhaData({ ...senhaData, confirmarSenha: e.target.value })} />
-                            <button type="button" className={styles.eyeButton} onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}> {showConfirmarSenha ? <EyeOff size={18} /> : <Eye size={18} />} </button>
+                            <button type="button" className={styles.eyeButton} onClick={() => setShowConfirmarSenha(!showConfirmarSenha)}> {showConfirmarSenha ? <EyeClosed size={18} /> : <Eye size={18} />} </button>
                         </div>
                         
                     </div>

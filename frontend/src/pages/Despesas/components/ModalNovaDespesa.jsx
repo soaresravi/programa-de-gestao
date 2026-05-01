@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 import api from '../../../services/api';
@@ -9,16 +9,26 @@ const ModalNovaDespesa = ({ isOpen, onClose, onSuccess, addToast, tipo }) => {
 
   const [confirmarSaidaAberto, setConfirmarSaidaAberto] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const limpar = {
     nome: '',
     valor: '',
     dataVencimento: '',
     dataPagamento: '',
     status: 'PENDENTE',
     fornecedor: false
-  });
+  };
 
+  const [formData, setFormData] = useState(limpar);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    
+    if (!isOpen) {
+      setFormData(limpar);
+      setConfirmarSaidaAberto(false);
+    }
+
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

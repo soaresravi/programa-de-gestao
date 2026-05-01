@@ -50,21 +50,22 @@ public class DespesaResource {
     }
 
     @GET
-
-    public Response listar(@QueryParam("tipo") String tipo, @QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim,
-    @QueryParam("apenasFornecedor") Boolean apenasFornecedor, @QueryParam("search") String search, @QueryParam("page") @DefaultValue("0") int page, @QueryParam("size") @DefaultValue("10") int size) {
+    
+    public Response listar(@QueryParam("tipo") String tipo, @QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim, @QueryParam("apenasFornecedor") Boolean apenasFornecedor, 
+    @QueryParam("search") String search, @QueryParam("page") @DefaultValue("0") int page, @QueryParam("size") @DefaultValue("10") int size) {
         
         if (dataInicio == null) {
             dataInicio = LocalDate.now().withDayOfMonth(1);
         }
-
+        
         if (dataFim == null) {
-            dataFim = LocalDate.now();
+            dataFim = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
         }
 
-        StringBuilder query = new StringBuilder("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null)");
+        StringBuilder query = new StringBuilder("tipo = ?1 and ((dataVencimento between ?2 and ?3) or (dataPagamento between ?2 and ?3))");
+    
         List<Object> params = new ArrayList<>();
-
+    
         params.add(tipo);
         params.add(dataInicio);
         params.add(dataFim);
@@ -77,53 +78,54 @@ public class DespesaResource {
             query.append(" and nome like ?").append(params.size() + 1);
             params.add("%" + search + "%");
         }
-
-        String hql = "from Despesa where " + query.toString() + " order by id desc";
-        long totalCount = Despesa.count(hql, params.toArray()); 
-        List<Despesa> despesas = Despesa.find(hql, params.toArray()).page(page, size).list();
         
-        return Response.ok(despesas).header("X-Total-Count", totalCount).header("X-Total-Pages", (int) Math.ceil((double)
-        totalCount / size )).header("X-Current-Page", page).header("X-Page-Size", size).build();
-
+        String filtroFinal = query.toString();
+        
+        long totalCount = Despesa.count(filtroFinal, params.toArray()); 
+        List<Despesa> despesas = Despesa.find(filtroFinal + " order by id desc", params.toArray()).page(page, size).list();
+        
+        return Response.ok(despesas).header("X-Total-Count", totalCount).header("X-Total-Pages", (int) Math.ceil((double) totalCount / size)).header("X-Current-Page", page).header("X-Page-Size", size).build();
     }
-
+    
     @GET
     @Path("/total")
-
+    
     public Response getTotal(@QueryParam("tipo") String tipo, @QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim")
     LocalDate dataFim, @QueryParam("apenasFornecedor") Boolean apenasFornecedor, @QueryParam("search") String search) {
 
         if (dataInicio == null) {
-            dataInicio = LocalDate.now().withDayOfMonth(1);
+            dataInicio = LocalDate.now().withDayOfYear(1); 
         }
-
+                        
         if (dataFim == null) {
-            dataFim = LocalDate.now();
+            dataFim = LocalDate.now().withDayOfYear(LocalDate.now().lengthOfYear());
         }
-
-        StringBuilder query = new StringBuilder("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null");
+        
+        StringBuilder query = new StringBuilder("tipo = ?1 and ((dataVencimento between ?2 and ?3) or (dataPagamento between ?2 and ?3))");
+        
         List<Object> params = new ArrayList<>();
-
+        
         params.add(tipo);
         params.add(dataInicio);
         params.add(dataFim);
-
+        
         if (apenasFornecedor != null && apenasFornecedor && "LOJA".equals(tipo)) {
             query.append(" and fornecedor = true");
         }
-
+        
         if (search != null && !search.trim().isEmpty()) {
             query.append(" and nome like ?").append(params.size() + 1);
             params.add("%" + search + "%");
         }
-
-        List<Despesa> despesas = Despesa.find("where " + query.toString(), params.toArray()).list();
-
+        
+        List<Despesa> despesas = Despesa.find(query.toString(), params.toArray()).list();
+        
         double totalValor = despesas.stream().mapToDouble(d -> d.valor != null ? d.valor : 0).sum();
         long totalPendentes = despesas.stream().filter(d -> d.status == StatusDespesa.PENDENTE).count();
         long totalAtrasadas = despesas.stream().filter(d -> d.status == StatusDespesa.ATRASADO).count();
-
+        
         return Response.ok(new TotalResponse(totalValor, totalPendentes, totalAtrasadas)).build();
+        
     }
 
     @GET
@@ -197,19 +199,19 @@ public class DespesaResource {
 
             LocalDate dataInicio, dataFim;
 
-            if (dataInicioStr != null && !dataInicioStr.isEmpty()) {
+            if (dataInicioStr != null && !dataInicioStr.isEmpty() && !"undefined".equals(dataInicioStr)) {
                 dataInicio = LocalDate.parse(dataInicioStr);
             } else {
                 dataInicio = LocalDate.now().withDayOfMonth(1);
             }
     
-            if (dataFimStr != null && !dataFimStr.isEmpty()) {
+            if (dataFimStr != null && !dataFimStr.isEmpty() && !"undefined".equals(dataFimStr)) {
                 dataFim = LocalDate.parse(dataFimStr);
             } else {
-                dataFim = LocalDate.now();
+                dataFim = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
             }
 
-            List <Despesa> despesas = Despesa.find("tipo = ?1 and (dataVencimento between ?2 and ?3 or dataVencimento is null) order by id desc", tipo, dataInicio, dataFim).list();
+            List<Despesa> despesas = Despesa.find("tipo = ?1 and ((dataVencimento between ?2 and ?3) or (dataPagamento between ?2 and ?3) or (dataVencimento is null and dataPagamento is null)) order by id desc", tipo, dataInicio, dataFim).list();
             String html = gerarHtmlRelatorio(despesas, tipo, dataInicio, dataFim);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -235,6 +237,7 @@ public class DespesaResource {
     private String gerarHtmlRelatorio(List<Despesa> despesas, String tipo, LocalDate dataInicio, LocalDate dataFim) {
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
         double totalValor = despesas.stream().mapToDouble(d -> d.valor != null ? d.valor : 0).sum();
         
         long totalPendentes = despesas.stream().filter(d -> d.status == StatusDespesa.PENDENTE).count();
@@ -327,10 +330,12 @@ public class DespesaResource {
                         badgeClass = "badge-pago";
                         statusText = "Pago";
                         break;
+                    
                     case PENDENTE:
                         badgeClass = "badge-pendente";
                         statusText = "Pendente";
                         break;
+                    
                     case ATRASADO:
                         badgeClass = "badge-atrasado";
                         statusText = "Atrasado";

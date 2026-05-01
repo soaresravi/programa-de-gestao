@@ -105,30 +105,28 @@ const Despesas = ({ tipo, subtitle, addToast }) => {
   }, [periodoPreset]);
 
   useEffect(() => {
-
+    
     const hoje = new Date();
-    const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    const primeiroDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
-    const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
-    const primeiroDiaAno = new Date(hoje.getFullYear(), 0, 1);
-      
+    
     const formatarDataParaAPI = (date) => {
       const ano = date.getFullYear();
       const mes = String(date.getMonth() + 1).padStart(2, '0');
       const dia = String(date.getDate()).padStart(2, '0');
       return `${ano}-${mes}-${dia}`;
     };
-    
+  
     if (periodoPreset !== 'personalizado') {
       
       switch (periodoPreset) {
         
         case 'mes':
-          
+        
+          const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+          const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);  
           setDataInicio(formatarDataParaAPI(primeiroDiaMes));
-          setDataFim(formatarDataParaAPI(hoje));
+          setDataFim(formatarDataParaAPI(ultimoDiaMes));
           break;
-      
+  
         case 'ultimos30':
           
           const trintaDiasAtras = new Date(hoje);
@@ -136,33 +134,33 @@ const Despesas = ({ tipo, subtitle, addToast }) => {
           setDataInicio(formatarDataParaAPI(trintaDiasAtras));
           setDataFim(formatarDataParaAPI(hoje));
           break;
-        
+  
         case 'mesAnterior':
-            
+          const primeiroDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
+          const ultimoDiaMesAnterior = new Date(hoje.getFullYear(), hoje.getMonth(), 0);
           setDataInicio(formatarDataParaAPI(primeiroDiaMesAnterior));
           setDataFim(formatarDataParaAPI(ultimoDiaMesAnterior));
           break;
-        
+  
         case 'ano':
-          
+          const primeiroDiaAno = new Date(hoje.getFullYear(), 0, 1);
+          const ultimoDiaAno = new Date(hoje.getFullYear(), 11, 31);
           setDataInicio(formatarDataParaAPI(primeiroDiaAno));
-          setDataFim(formatarDataParaAPI(hoje));
+          setDataFim(formatarDataParaAPI(ultimoDiaAno));
           break;
-        
+  
         default:
           break;
-
       }
-    
+
     } else {
       
       if (dataPersonalizadaInicio && dataPersonalizadaFim) {
         setDataInicio(dataPersonalizadaInicio);
         setDataFim(dataPersonalizadaFim);
       }
-
+      
     }
-    
   }, [periodoPreset, dataPersonalizadaInicio, dataPersonalizadaFim]);
 
   const { data: despesas, refetch, isLoading } = useQuery({
@@ -401,7 +399,7 @@ const Despesas = ({ tipo, subtitle, addToast }) => {
       </div>
     </div>
 
-    <ModalExportarPDF isOpen={modalExportarAberto} onClose={() => setModalExportarAberto(false)} addToast={addToast} tipo={tipo} apiUrl="/despesas/exportar-pdf" />
+    <ModalExportarPDF isOpen={modalExportarAberto} onClose={() => setModalExportarAberto(false)} addToast={addToast} tipo={tipo} apiUrl="/despesas/exportar-pdf" dataInicio={dataInicio} dataFim={dataFim}/>
     <ModalNovaDespesa isOpen={showModal} onClose={() => setShowModal(false)} onSuccess={() => refetch()} addToast={addToast} tipo={tipo} />
     
     <ModalDetalhesDespesa isOpen={modalDetalhesAberto}

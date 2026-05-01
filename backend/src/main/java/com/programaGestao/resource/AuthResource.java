@@ -141,6 +141,7 @@ public class AuthResource {
 
     @PUT
     @Path("/me")
+    @RolesAllowed("user")
     @Transactional
 
     public Response atualizarPerfil(@Valid AtualizarPerfilDTO dto, @Context SecurityContext ctx) {
@@ -183,6 +184,7 @@ public class AuthResource {
 
     @DELETE
     @Path("/me")
+    @RolesAllowed("user")
     @Transactional
 
     public Response excluirConta(@Context SecurityContext ctx) {
