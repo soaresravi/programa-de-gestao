@@ -22,6 +22,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.smallrye.jwt.build.Jwt;
+import jakarta.annotation.security.PermitAll;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
@@ -36,6 +37,7 @@ public class AuthResource {
     
     @POST
     @Path("/registro")
+    @PermitAll
     @Transactional
 
     public Response registrar(@Valid UserDTO dto) {
@@ -57,6 +59,7 @@ public class AuthResource {
 
     @POST
     @Path("/login")
+    @PermitAll
     @Transactional
 
     public Response login(@Valid LoginDTO dto) {
@@ -83,6 +86,7 @@ public class AuthResource {
 
     @POST
     @Path("/refresh")
+    @PermitAll
     @Transactional
 
     public Response refresh(@Valid RefreshTokenRequest request) {
@@ -206,6 +210,7 @@ public class AuthResource {
 
     @POST
     @Path("/esqueci-senha")
+    @PermitAll
     @Transactional
 
     public Response esqueciSenha(@Valid EmailRequest request) {
@@ -235,6 +240,7 @@ public class AuthResource {
 
     @POST
     @Path("/verificar-codigo")
+    @PermitAll
     @Transactional
 
     public Response verificarCodigo(@Valid CodigoRequest request) {
@@ -259,6 +265,7 @@ public class AuthResource {
 
     @POST
     @Path("/redefinir-senha")
+    @PermitAll
     @Transactional
 
     public Response redefinirSenha(@Valid RedefinirSenhaRequest request) {

@@ -47,9 +47,10 @@ const Cadastro = ({ showError, showSuccess }) => {
 
     } catch (error) {
       
-      console.error('Erro no cadastro:', error);
-      setErro(error.response?.data || "Erro ao criar conta");
-      if (showError) showError(mensagem);
+      console.error('Erro no cadastro:', error);      
+      const mensagemErro = error.response?.data?.message || (typeof error.response?.data === 'string' ? error.response.data : null) ||  "Erro ao criar conta. Tente novamente mais tarde.";
+      setErro(mensagemErro);
+      if (showError) showError(mensagemErro);
 
     } finally {
       setLoading(false);
