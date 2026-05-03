@@ -293,9 +293,9 @@ public class DashboardResource {
     }
 
     @GET
-    @Path("/produtos-top")
+    @Path("/relacao-produtos")
 
-    public Response getProdutosTop(@QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim) {
+    public Response getRelacaoProdutos(@QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim) {
 
         if (dataInicio == null || dataFim == null) {
            
@@ -308,7 +308,7 @@ public class DashboardResource {
 
         List<Venda> vendas = Venda.find("data between ?1 and ?2", dataInicio, dataFim).list();
 
-        Map<Long, Double> lucroPorProduto = new HashMap<>();
+        Map<Long, Integer> quantidadePorProduto = new HashMap<>();
         Map<Long, String> nomePorProduto = new HashMap<>();
 
         for (Venda v : vendas) {
@@ -317,10 +317,9 @@ public class DashboardResource {
 
                 for (ItemVenda i : v.itens) {
 
-                    if (i.produto != null) {
+                    if (i.produto != null && i.produto.tipo != null && !i.produto.tipo.name().equalsIgnoreCase("MATERIA_PRIMA")) {
                         Long id = i.produto.id;
-                        double lucro = (i.precoUnitario != null ? i.precoUnitario : 0) - (i.custoUnitario != null ? i.custoUnitario : 0);
-                        lucroPorProduto.merge(id, lucro * i.quantidade, Double::sum);
+                        quantidadePorProduto.merge(id, i.quantidade, Integer::sum);
                         nomePorProduto.putIfAbsent(id, i.produto.nome);
                     }
 
@@ -328,79 +327,22 @@ public class DashboardResource {
             }
         }
 
-        List<Map<String, Object>> ranking = new ArrayList<>();
+        List<Map<String, Object>> relacao = new ArrayList<>();
 
-        for (Map.Entry<Long, Double> entry : lucroPorProduto.entrySet()) {
-
-            Map<String, Object> item = new HashMap<>();
-
-            item.put("id", entry.getKey());
-            item.put("nome", nomePorProduto.get(entry.getKey()));
-            item.put("lucro", entry.getValue());
-
-            ranking.add(item);
-
-        }
-
-        ranking.sort((a, b) -> Double.compare((Double) b.get("lucro"), (Double) a.get("lucro")));
-        return Response.ok(ranking.stream().limit(5).collect(Collectors.toList())).build();
-
-    }
-
-    @GET
-    @Path("/produtos-flop")
-
-    public Response getProdutosFlop(@QueryParam("dataInicio") LocalDate dataInicio, @QueryParam("dataFim") LocalDate dataFim) {
-
-        if (dataInicio == null || dataFim == null) {
-           
-            LocalDate[] padrao = getDatasPadrao();
-        
-            dataInicio = padrao[0];
-            dataFim = padrao[1];
-        
-        }
-
-        List<Venda> vendas = Venda.find("data between ?1 and ?2", dataInicio, dataFim).list();
-
-        Map<Long, Double> lucroPorProduto = new HashMap<>();
-        Map<Long, String> nomePorProduto = new HashMap<>();
-
-        for (Venda v : vendas) {
-
-            if (v.itens != null) {
-
-                for (ItemVenda i : v.itens) {
-
-                    if (i.produto != null) {
-                        Long id = i.produto.id;
-                        double lucro = (i.precoUnitario != null ? i.precoUnitario : 0) - (i.custoUnitario != null ? i.custoUnitario : 0);
-                        lucroPorProduto.merge(id, lucro * i.quantidade, Double::sum);
-                        nomePorProduto.putIfAbsent(id, i.produto.nome);
-                    }
-
-                }
-            }
-            
-        }
-
-        List<Map<String, Object>> ranking = new ArrayList<>();
-
-        for (Map.Entry<Long, Double> entry : lucroPorProduto.entrySet()) {
+        for (Map.Entry<Long, Integer> entry : quantidadePorProduto.entrySet()) {
 
             Map<String, Object> item = new HashMap<>();
 
             item.put("id", entry.getKey());
             item.put("nome", nomePorProduto.get(entry.getKey()));
-            item.put("lucro", entry.getValue());
+            item.put("quantidade", entry.getValue());
 
-            ranking.add(item);
+            relacao.add(item);
 
         }
 
-        ranking.sort((a, b) -> Double.compare((Double) a.get("lucro"), (Double) b.get("lucro")));
-
-        return Response.ok(ranking.stream().limit(5).collect(Collectors.toList())).build();
+        relacao.sort((a, b) -> Integer.compare((Integer) b.get("quantidade"), (Integer) a.get("quantidade")));
+        return Response.ok(relacao).build();
 
     }
 
@@ -563,7 +505,7 @@ public class DashboardResource {
             double lucroClienteFinal = vendas.stream().filter(v -> v.clienteFinal != null && v.clienteFinal).mapToDouble(v -> v.lucroBruto != null ? v.lucroBruto : 0).sum();
             double lucroLojista = vendas.stream().filter(v -> v.clienteFinal != null && !v.clienteFinal).mapToDouble(v -> v.lucroBruto != null ? v.lucroBruto : 0).sum();
             
-            Map<Long, Double> lucroPorProduto = new HashMap<>();
+            Map<Long, Integer> qtdPorProduto = new HashMap<>();
             Map<Long, String> nomePorProduto = new HashMap<>();
             
             for (Venda v : vendas) {
@@ -572,9 +514,8 @@ public class DashboardResource {
                     
                     for (ItemVenda i : v.itens) {
                         
-                        if (i.produto != null) {
-                            double lucro = (i.precoUnitario != null ? i.precoUnitario : 0) - (i.custoUnitario != null ? i.custoUnitario : 0);
-                            lucroPorProduto.merge(i.produto.id, lucro * i.quantidade, Double::sum);
+                        if (i.produto != null && i.produto.tipo != null && !i.produto.tipo.name().equalsIgnoreCase("MATERIA_PRIMA")) {
+                            qtdPorProduto.merge(i.produto.id, i.quantidade, Integer::sum);
                             nomePorProduto.putIfAbsent(i.produto.id, i.produto.nome);
                         }
 
@@ -584,14 +525,13 @@ public class DashboardResource {
 
             }
             
-            List<Map<String, Object>> produtosTop = lucroPorProduto.entrySet().stream().map(e -> { Map<String, Object> m = new HashMap<>(); m.put("nome", nomePorProduto.get(e.getKey())); m.put("lucro", e.getValue()); return m; }).sorted((a, b) -> Double.compare((Double) b.get("lucro"), (Double) a.get("lucro"))).limit(5).collect(Collectors.toList());
-            List<Map<String, Object>> produtosFlop = lucroPorProduto.entrySet().stream().map(e -> { Map<String, Object> m = new HashMap<>(); m.put("nome", nomePorProduto.get(e.getKey())); m.put("lucro", e.getValue()); return m; }).sorted((a, b) -> Double.compare((Double) a.get("lucro"), (Double) b.get("lucro"))).limit(5).collect(Collectors.toList());
-            
+            List<Map<String, Object>> relacaoProdutos = qtdPorProduto.entrySet().stream().map(e -> { Map<String, Object> m = new HashMap<>(); m.put("nome", nomePorProduto.get(e.getKey())); m.put("quantidade", e.getValue()); return m; }).sorted((a, b) -> Integer.compare((Integer) b.get("quantidade"), (Integer) a.get("quantidade"))).collect(Collectors.toList());
+  
             Map<String, Double> totalVendidoVendedor = new HashMap<>();
             vendas.stream().filter(v -> v.vendedor != null).forEach(v -> totalVendidoVendedor.merge(v.vendedor, v.valorTotal, Double::sum));
             List<Map<String, Object>> rankingVendedores = totalVendidoVendedor.entrySet().stream().map(e -> { Map<String, Object> m = new HashMap<>(); m.put("vendedor", e.getKey()); m.put("totalVendido", e.getValue()); return m; }).sorted((a, b) -> Double.compare((Double) b.get("totalVendido"), (Double) a.get("totalVendido"))).collect(Collectors.toList());
             
-            String html = gerarHtmlRelatorio(dataInicio, dataFim, totalReceitas, totalCusto, despesasLojaTotal, despesasCasaTotal, lucroLiquido, lucroPorTipo, quantidadePorTipo, vendasLojaFisica, vendasOutros, vendas.size(), lucroClienteFinal, lucroLojista, produtosTop, produtosFlop, rankingVendedores);
+            String html = gerarHtmlRelatorio(dataInicio, dataFim, totalReceitas, totalCusto, despesasLojaTotal, despesasCasaTotal, lucroLiquido, lucroPorTipo, quantidadePorTipo, vendasLojaFisica, vendasOutros, vendas.size(), lucroClienteFinal, lucroLojista, relacaoProdutos, rankingVendedores);
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ITextRenderer renderer = new ITextRenderer();
@@ -613,8 +553,7 @@ public class DashboardResource {
 
     private String gerarHtmlRelatorio(LocalDate dataInicio, LocalDate dataFim, double totalReceitas, double totalCusto, double despesasLoja,
     double despesasCasa, double lucroLiquido, Map<String, Double> lucroPorTipo, Map<String, Integer> quantidadePorTipo, double vendasLojaFisica,
-    double vendasOutros, int totalVendas, double lucroClienteFinal, double lucroLojista, List<Map<String, Object>> produtosTop, 
-    List<Map<String, Object>> produtosFlop, List<Map<String, Object>> rankingVendedores) {
+    double vendasOutros, int totalVendas, double lucroClienteFinal, double lucroLojista, List<Map<String, Object>> relacaoProdutos, List<Map<String, Object>>rankingVendedores) {
         
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
@@ -682,24 +621,14 @@ public class DashboardResource {
         html.append("</tbody></table></td></tr></table>");
         
         html.append("<table class='col-container'><tr><td class='col'>");
-        html.append("<h2>Produtos mais lucrativos</h2>");
-        html.append("<table class='dados'><thead><tr><th>Produto</th><th>Lucro</th></tr></thead><tbody>");
+        html.append("<h2>Relação de produtos vendidos</h2>");
+        html.append("<table class='dados'><thead><tr><th>Produto</th><th>Quantidade</th></tr></thead><tbody>");
         
-        for (Map<String, Object> p : produtosTop) {
-            html.append("<tr><td>").append(p.get("nome")).append("</td><td>R$ ").append(String.format("%,.2f", p.get("lucro"))).append("</td></tr>");
+        for (Map<String, Object> p : relacaoProdutos) {
+            html.append("<tr><td>").append(p.get("nome")).append("</td><td>").append(p.get("quantidade")).append("</td></tr>");
         }
         
         html.append("</tbody></table></td>");
-        
-        html.append("<td class='col-spacer'></td><td class='col'>");
-        html.append("<h2>Produtos menos lucrativos</h2>");
-        html.append("<table class='dados'><thead><tr><th>Produto</th><th>Lucro</th></tr></thead><tbody>");
-    
-        for (Map<String, Object> p : produtosFlop) {
-            html.append("<tr><td>").append(p.get("nome")).append("</td><td>R$ ").append(String.format("%,.2f", p.get("lucro"))).append("</td></tr>");
-        }
-        
-        html.append("</tbody></table></td></tr></table>");
         
         html.append("<table class='col-container'><tr><td class='col'>");
         html.append("<h2>Ranking vendedores</h2>");
