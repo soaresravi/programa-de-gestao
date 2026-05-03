@@ -228,25 +228,12 @@ const Dashboard = ({ addToast }) => {
 
   });
 
-  const { data: produtosTop } = useQuery({
+  const { data: relacaoProdutos } = useQuery({
     
-    queryKey: ['dashboardProdutosTop', dataInicio, dataFim],
-
-    queryFn: async () => {
-      const response = await api.get('/dashboard/produtos-top', { params: { dataInicio, dataFim } });
-      return response.data;
-    },
-
-    enabled: !!dataInicio && !!dataFim
-
-  });
-
-  const { data: produtosFlop } = useQuery({
+    queryKey: ['dashboardRelacaoProdutos', dataInicio, dataFim],
     
-    queryKey: ['dashboardProdutosFlop', dataInicio, dataFim],
-
     queryFn: async () => {
-      const response = await api.get('/dashboard/produtos-flop', { params: { dataInicio, dataFim } });
+      const response = await api.get('/dashboard/relacao-produtos', { params: { dataInicio, dataFim } });
       return response.data;
     },
 
@@ -471,36 +458,22 @@ const Dashboard = ({ addToast }) => {
         </div>
 
       </div>
-      
+
       <div className={styles.twoColumns}>
         
         <div className={styles.chartCard}>
           
-          <h3 className={styles.chartTitle}>Produtos que mais lucram</h3>
+          <h3 className={styles.chartTitle}>Relação de Produtos Vendidos</h3>
           
-          <TabelaRanking data={produtosTop}
-          
+          <TabelaRanking  data={relacaoProdutos}
           columns={[
             { key: 'nome', label: 'Produto' },
-            { key: 'lucro', label: 'Lucro', format: (v) => `R$ ${v?.toFixed(2)}` }
-          ]} />
-
-        </div>
+            { key: 'quantidade', label: 'Qtd. Vendida' },
+          ]}  />
         
-        <div className={styles.chartCard}>
-          
-          <h3 className={styles.chartTitle}>Produtos que menos lucram</h3>
-          
-          <TabelaRanking data={produtosFlop}
-          
-          columns={[
-            { key: 'nome', label: 'Produto' },
-            { key: 'lucro', label: 'Lucro', format: (v) => `R$ ${v?.toFixed(2)}` }
-          ]} />
-
         </div>
-        
       </div>
+
     </div>
     
     <ModalExportarPDF isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addToast={addToast} apiUrl="/dashboard/exportar-pdf" dataInicio={dataInicio} dataFim={dataFim} />
