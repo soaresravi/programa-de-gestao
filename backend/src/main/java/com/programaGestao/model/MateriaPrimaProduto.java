@@ -1,6 +1,6 @@
 package com.programaGestao.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class MateriaPrimaProduto extends PanacheEntity {
 
     @ManyToOne
-    @JsonIgnore
+    @JsonBackReference
     
     public Produto produto;
 
