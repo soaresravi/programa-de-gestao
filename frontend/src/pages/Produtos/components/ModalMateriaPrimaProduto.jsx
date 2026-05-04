@@ -10,6 +10,8 @@ const ModalMateriaPrimaProduto = ({ isOpen, onClose, onSave, onSuccess, onError 
   const [nome, setNome] = useState('');
   const [custoRevenda, setCustoRevenda] = useState('');
   const [precoVenda, setPrecoVenda] = useState('');
+  const [fotoURL, setFotoURL] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [confirmarSaidaAberto, setConfirmarSaidaAberto] = useState(false);
 
@@ -22,11 +24,55 @@ const ModalMateriaPrimaProduto = ({ isOpen, onClose, onSave, onSuccess, onError 
       setNome('');
       setCustoRevenda('');
       setPrecoVenda('');
+      setFotoURL('');
+      setUploading(false);
       setLoading(false);
       setConfirmarSaidaAberto(false);
     }
     
   }, [isOpen]);
+
+  const handleImageUpload = async (e) => {
+    
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.match('image/jpeg') && !file.type.match('image/jpg') && !file.type.match('image/png')) {
+      alert('Por favor, selecione uma imagem nos formatos de: JPG, JPEG ou PNG');
+      return;
+    }
+    
+    setUploading(true);
+    const formDataImg = new FormData();
+    formDataImg.append('image', file);
+
+    try {
+     
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, { 
+        method: 'POST', 
+        body: formDataImg, 
+      });
+     
+      const data = await response.json();
+
+      if (data.success) {
+        setFotoURL(data.data.url);
+      } else {
+        alert('Erro ao fazer upload da imagem');
+      }
+
+    } catch (error) {
+      console.error('Erro ao fazer upload:', error);
+      alert('Erro ao fazer upload da imagem');
+    } finally {
+      setUploading(false);
+    }
+
+  };
+
+  const removeImage = () => {
+    setFotoURL('');
+  };
 
   const handleSubmit = async () => {
 
@@ -54,6 +100,7 @@ const ModalMateriaPrimaProduto = ({ isOpen, onClose, onSave, onSuccess, onError 
         tipo: 'MATERIA_PRIMA',
         precoVenda: parseFloat(precoVenda),
         custoProducao: parseFloat(custoRevenda),
+        fotoURL:fotoURL || null,
         materiasPrimas: []
       };
 
@@ -67,6 +114,7 @@ const ModalMateriaPrimaProduto = ({ isOpen, onClose, onSave, onSuccess, onError 
       setNome('');
       setCustoRevenda('');
       setPrecoVenda('');
+      setFotoURL('');
 
     } catch (error) {
       console.error('Erro ao salvar matéria-prima:', error);
@@ -105,6 +153,35 @@ const ModalMateriaPrimaProduto = ({ isOpen, onClose, onSave, onSuccess, onError 
       </div>
       
       <div className={styles.divider} />
+
+      <div className={styles.formGroup}>
+        
+        <label>Imagem da matéria-prima</label>
+          
+        {fotoURL ? (
+          
+          <div style={{ marginTop: '8px' }}>
+            
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+              <button type="button" style={{ background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer', fontSize: '12px' }} onClick={removeImage}> X Remover imagem </button>
+            </div>
+            
+            <img src={fotoURL} alt="Preview" style={{ width: '100%', maxHeight: '150px', objectFit: 'cover', borderRadius: '8px' }} />
+          
+          </div>
+
+        ) : (
+          
+          <div style={{ marginTop: '8px' }}>
+            <input type="file" accept="image/jpeg,image/jpg,image/png" onChange={handleImageUpload} className={styles.inputNome} />
+            
+            {uploading && <p style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>Enviando imagem...</p>}
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>Formatos aceitos: JPG, JPEG, PNG</p>
+          
+          </div>
+        )}
+        
+      </div>
 
       <div className={styles.formGroup}>
         <label>Nome da matéria-prima</label>
