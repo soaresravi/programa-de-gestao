@@ -189,18 +189,21 @@ public class ProdutoResource {
         produto.precoVenda = dto.precoVenda;
         produto.fotoURL = dto.fotoURL;
 
-        if (dto.tipo == TipoProduto.MATERIA_PRIMA) {
+        if (dto.tipo == TipoProduto.MATERIA_PRIMA || produto.tipo == TipoProduto.MATERIA_PRIMA) {
+   
+            if (dto.custoProducao != null && dto.custoProducao > 0) {
+                produto.custoProducao = dto.custoProducao;
+            } else if (produto.custoProducao != null && produto.custoProducao > 0) {
+                produto.custoProducao = produto.custoProducao;
+            }
 
-            produto.custoProducao = dto.custoProducao;
-            
             if (produto.materiasPrimas != null) {
                 
                 for (MateriaPrimaProduto mp : produto.materiasPrimas) {
                     mp.delete();
                 }
-
+            
                 produto.materiasPrimas.clear();
-
             }
 
             produto.materiasPrimas = null;
@@ -214,7 +217,7 @@ public class ProdutoResource {
                 }
 
                 produto.materiasPrimas.clear();
-
+            
             }
 
             if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
@@ -234,14 +237,16 @@ public class ProdutoResource {
                     produto.materiasPrimas.add(mp);
                     
                     custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
+               
                 }
-
+               
                 produto.custoProducao = custoTotal;
-
+            
             } else {
                 produto.custoProducao = null;
                 produto.materiasPrimas = null;
             }
+
         }
 
         produto.persist();
