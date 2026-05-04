@@ -71,36 +71,28 @@ const ModalVendaDetalhes = ({ isOpen, onClose, vendaId, addToast, onSuccess }) =
         const novoValorTotal = novoValorTotalComJuros - (venda.valorDesconto || 0);
         const novoLucroBruto = novoSubtotal - (venda.itens?.reduce((acc, item) => acc + (item.quantidade * (item.custoUnitario || 0)), 0) || 0);
 
-        if (venda.subtotalProdutos !== novoSubtotal || venda.valorTotal !== novoValorTotal) {
-
-            setVenda(prev => ({
+        if (Math.abs(venda.subtotalProdutos - novoSubtotal) > 0.01 || Math.abs(venda.valorTotal - novoValorTotal) > 0.01) {
             
+            setVenda(prev => ({
                 ...prev,
-    
                 subtotalProdutos: novoSubtotal,
                 valorComFrete: novoValorComFrete,
                 valorTotalComJuros: novoValorTotalComJuros,
                 valorTotal: novoValorTotal,
                 lucroBruto: novoLucroBruto
-            
             }));
 
         }
 
     }, [venda?.itens, venda?.valorFrete, venda?.valorDesconto, venda?.parcelas, venda?.formaPagamento]);
-
+    
     useEffect(() => {
-
+        
         if (vendaData) {
-
             setVenda(vendaData);
-            
-            if (!originalData) {
-                setOriginalData(vendaData);
-            }
-
+            setOriginalData(vendaData);
         }
-
+    
     }, [vendaData]);
 
     const handleEdit = () => {
@@ -115,6 +107,7 @@ const ModalVendaDetalhes = ({ isOpen, onClose, vendaId, addToast, onSuccess }) =
 
     const handleSave = async () => {
 
+        if (loading) return;
         setLoading(true);
 
         try {
@@ -148,9 +141,10 @@ const ModalVendaDetalhes = ({ isOpen, onClose, vendaId, addToast, onSuccess }) =
             addToast('Venda atualizada com sucesso!', 'success');
            
             setIsEditing(false);
-            refetch();
+            setOriginalData(venda);
+            await refetch();
             if (onSuccess) onSuccess();
-
+        
         } catch (error) {
             console.error('Erro ao salvar:', error);
             addToast(error.response?.data?.message || 'Erro ao salvar alterações', 'error');
