@@ -147,7 +147,7 @@ public class VendaResource {
             venda.lojista.persist();
         }
 
-        return Response.ok(venda).build();
+        return Response.status(Response.Status.CREATED).entity(venda.id).build();
 
     }
 

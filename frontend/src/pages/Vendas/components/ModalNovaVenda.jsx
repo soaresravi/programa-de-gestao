@@ -135,11 +135,8 @@ const ModalNovaVenda = ({ onClose, onSuccess, addToast }) => {
             addToast('Venda registrada com sucesso!', 'success');
 
         } catch (error) {
-           
-            console.error('Erro ao salvar venda:', error);
-            const errorMsg = error.response?.data?.message || error.response?.data || 'Erro ao salvar venda';
-            addToast(errorMsg, 'error');
-      
+            const mensagem = error.response?.data?.message || error.message || 'Erro desconhecido';
+            addToast(mensagem, 'error');
         } finally {
             setLoading(false);
         }
