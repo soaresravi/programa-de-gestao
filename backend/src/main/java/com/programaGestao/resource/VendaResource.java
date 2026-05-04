@@ -401,7 +401,7 @@ public class VendaResource {
         }
 
         venda.persist();
-        return Response.ok(venda).build();
+        return Response.noContent().build();
 
     }
 
