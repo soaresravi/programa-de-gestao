@@ -41,17 +41,19 @@ public class ProdutoResource {
         produto.especificacao = dto.especificacao;
         produto.precoVenda = dto.precoVenda;
         produto.fotoURL = dto.fotoURL;
-        produto.custoProducao = dto.custoProducao;
+        
+        if (dto.tipo == TipoProduto.MATERIA_PRIMA) {
+            produto.custoProducao = dto.custoProducao;
+        }
         
         produto.persist();
 
-        if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
+        if (dto.tipo != TipoProduto.MATERIA_PRIMA && dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
 
             double custoTotal = 0;
             produto.materiasPrimas = new ArrayList<>();
 
             for (MateriaPrimaProdutoDTO mpDTO : dto.materiasPrimas) {
-                
                 MateriaPrimaProduto mp = new MateriaPrimaProduto();
                 
                 mp.produto = produto;
@@ -193,9 +195,14 @@ public class ProdutoResource {
                 mp.delete();
             }
 
+            produto.materiasPrimas.clear();
+
         }
 
-        if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
+        if (dto.tipo == TipoProduto.MATERIA_PRIMA) {
+            produto.custoProducao = dto.custoProducao;
+            produto.materiasPrimas = null;
+        } else if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
 
             double custoTotal = 0;
             produto.materiasPrimas = new ArrayList<>();
@@ -213,7 +220,7 @@ public class ProdutoResource {
                 produto.materiasPrimas.add(mp);
                 
                 custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
-                
+
             }
 
             produto.custoProducao = custoTotal;
