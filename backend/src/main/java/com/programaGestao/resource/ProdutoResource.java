@@ -189,45 +189,59 @@ public class ProdutoResource {
         produto.precoVenda = dto.precoVenda;
         produto.fotoURL = dto.fotoURL;
 
-        if (produto.materiasPrimas != null) {
-            
-            for (MateriaPrimaProduto mp : produto.materiasPrimas) {
-                mp.delete();
-            }
-
-            produto.materiasPrimas.clear();
-
-        }
-
         if (dto.tipo == TipoProduto.MATERIA_PRIMA) {
+
             produto.custoProducao = dto.custoProducao;
-            produto.materiasPrimas = null;
-        } else if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
+            
+            if (produto.materiasPrimas != null) {
+                
+                for (MateriaPrimaProduto mp : produto.materiasPrimas) {
+                    mp.delete();
+                }
 
-            double custoTotal = 0;
-            produto.materiasPrimas = new ArrayList<>();
-
-            for (MateriaPrimaProdutoDTO mpDTO : dto.materiasPrimas) {
-                
-                MateriaPrimaProduto mp = new MateriaPrimaProduto();
-                
-                mp.produto = produto;
-                mp.nome = mpDTO.nome;
-                mp.quantidade = mpDTO.quantidade;
-                mp.valorUnitarioNoMomento = mpDTO.valorUnitarioNoMomento;
-                
-                mp.persist();
-                produto.materiasPrimas.add(mp);
-                
-                custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
+                produto.materiasPrimas.clear();
 
             }
 
-            produto.custoProducao = custoTotal;
+            produto.materiasPrimas = null;
 
         } else {
-            produto.custoProducao = null;
-            produto.materiasPrimas = null;
+
+            if (produto.materiasPrimas != null) {
+                
+                for (MateriaPrimaProduto mp : produto.materiasPrimas) {
+                    mp.delete();
+                }
+
+                produto.materiasPrimas.clear();
+
+            }
+
+            if (dto.materiasPrimas != null && !dto.materiasPrimas.isEmpty()) {
+               
+                double custoTotal = 0;
+                produto.materiasPrimas = new ArrayList<>();
+
+                for (MateriaPrimaProdutoDTO mpDTO : dto.materiasPrimas) {
+                    MateriaPrimaProduto mp = new MateriaPrimaProduto();
+                    
+                    mp.produto = produto;
+                    mp.nome = mpDTO.nome;
+                    mp.quantidade = mpDTO.quantidade;
+                    mp.valorUnitarioNoMomento = mpDTO.valorUnitarioNoMomento;
+                    
+                    mp.persist();
+                    produto.materiasPrimas.add(mp);
+                    
+                    custoTotal += mp.quantidade * mp.valorUnitarioNoMomento;
+                }
+
+                produto.custoProducao = custoTotal;
+
+            } else {
+                produto.custoProducao = null;
+                produto.materiasPrimas = null;
+            }
         }
 
         produto.persist();
