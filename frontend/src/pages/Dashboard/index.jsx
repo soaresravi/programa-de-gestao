@@ -317,6 +317,8 @@ const Dashboard = ({ addToast }) => {
 
   };
 
+  const totalCamasVendidas = relacaoProdutos?.reduce((acc, item) => acc + (item.quantidade || 0), 0) || 0;
+
   return (
   
   <div className={styles.container}>
@@ -470,6 +472,10 @@ const Dashboard = ({ addToast }) => {
             { key: 'nome', label: 'Produto' },
             { key: 'quantidade', label: 'Qtd. Vendida' },
           ]}  />
+          
+          <div style={{ marginTop: '15px', padding: '10px 0', borderTop: '2px solid #eee', fontSize: '1.1rem',  fontWeight: 'bold', color: '#02323C', textAlign: 'right' }}>
+            Total: {totalCamasVendidas} unidades vendidas
+          </div>
         
         </div>
       </div>

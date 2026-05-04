@@ -54,7 +54,8 @@ public class AuthResource {
         usuario.senha = hashed;
 
         usuario.persist();
-        return Response.ok(usuario).build();
+        return Response.status(Response.Status.CREATED).entity("Usuário criado com sucesso").build();
+        
     }
 
     @POST
