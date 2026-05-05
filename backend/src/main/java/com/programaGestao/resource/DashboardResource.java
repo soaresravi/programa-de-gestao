@@ -530,8 +530,9 @@ public class DashboardResource {
             Map<String, Double> totalVendidoVendedor = new HashMap<>();
             vendas.stream().filter(v -> v.vendedor != null).forEach(v -> totalVendidoVendedor.merge(v.vendedor, v.valorTotal, Double::sum));
             List<Map<String, Object>> rankingVendedores = totalVendidoVendedor.entrySet().stream().map(e -> { Map<String, Object> m = new HashMap<>(); m.put("vendedor", e.getKey()); m.put("totalVendido", e.getValue()); return m; }).sorted((a, b) -> Double.compare((Double) b.get("totalVendido"), (Double) a.get("totalVendido"))).collect(Collectors.toList());
-            
-            String html = gerarHtmlRelatorio(dataInicio, dataFim, totalReceitas, totalCusto, despesasLojaTotal, despesasCasaTotal, lucroLiquido, lucroPorTipo, quantidadePorTipo, vendasLojaFisica, vendasOutros, vendas.size(), lucroClienteFinal, lucroLojista, relacaoProdutos, rankingVendedores);
+            int totalItensGeral = relacaoProdutos.stream().mapToInt(m -> (Integer) m.get("quantidade")).sum();
+
+            String html = gerarHtmlRelatorio(dataInicio, dataFim, totalReceitas, totalCusto, despesasLojaTotal, despesasCasaTotal, lucroLiquido, lucroPorTipo, quantidadePorTipo, vendasLojaFisica, vendasOutros, vendas.size(), lucroClienteFinal, lucroLojista, relacaoProdutos, rankingVendedores, totalItensGeral);
             
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ITextRenderer renderer = new ITextRenderer();
@@ -553,7 +554,7 @@ public class DashboardResource {
 
     private String gerarHtmlRelatorio(LocalDate dataInicio, LocalDate dataFim, double totalReceitas, double totalCusto, double despesasLoja,
     double despesasCasa, double lucroLiquido, Map<String, Double> lucroPorTipo, Map<String, Integer> quantidadePorTipo, double vendasLojaFisica,
-    double vendasOutros, int totalVendas, double lucroClienteFinal, double lucroLojista, List<Map<String, Object>> relacaoProdutos, List<Map<String, Object>>rankingVendedores) {
+    double vendasOutros, int totalVendas, double lucroClienteFinal, double lucroLojista, List<Map<String, Object>> relacaoProdutos, List<Map<String, Object>>rankingVendedores, int totalItensGeral) {
         
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         
@@ -629,6 +630,10 @@ public class DashboardResource {
         }
         
         html.append("</tbody></table></td>");
+
+        html.append("<div style='text-align:right; font-weight:bold; font-size:12px; margin-top:5px;'>");
+        html.append("Total: ").append(totalItensGeral).append(" unidades vendidas");
+        html.append("</div></td>");
         
         html.append("<table class='col-container'><tr><td class='col'>");
         html.append("<h2>Ranking vendedores</h2>");
