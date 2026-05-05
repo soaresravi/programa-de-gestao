@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.mindrot.jbcrypt.BCrypt;
 import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
+import io.quarkus.narayana.jta.QuarkusTransaction;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.annotation.security.PermitAll;
 
@@ -207,12 +207,11 @@ public class AuthResource {
     }
 
     @Inject
-    Mailer mailer;
+    io.quarkus.mailer.reactive.ReactiveMailer mailer;
 
     @POST
     @Path("/esqueci-senha")
     @PermitAll
-    @Transactional
 
     public Response esqueciSenha(@Valid EmailRequest request) {
 
@@ -222,18 +221,20 @@ public class AuthResource {
             return Response.ok("Se o email existir, você receberá um código").build();
         }
 
-        RecuperacaoSenha.update("utilizado = true where usuario = ?1 and utilizado = false", usuario);
-
         RecuperacaoSenha recuperacao = new RecuperacaoSenha();
+        
         recuperacao.usuario = usuario;
         recuperacao.codigo = RecuperacaoSenha.gerarCodigo();
         recuperacao.expiracao = LocalDateTime.now().plusMinutes(15);
         recuperacao.utilizado = false;
 
-        recuperacao.persist();
+        QuarkusTransaction.requiringNew().run(() -> {
+            RecuperacaoSenha.update("utilizado = true where usuario = ?1 and utilizado = false", usuario);
+            recuperacao.persist();
+        });
 
         String html = gerarTemplateEmail(recuperacao.codigo, usuario.nome);
-        mailer.send(Mail.withHtml(usuario.email, "Recuperação de senha", html));
+        mailer.send(Mail.withHtml(usuario.email, "Recuperação de senha", html)).subscribe().with( success -> System.out.println("E-mail enviado com sucesso!"), failure -> failure.printStackTrace());
 
         return Response.ok("Se o email existir, você receberá um código").build();
 
