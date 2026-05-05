@@ -599,11 +599,29 @@ public class DashboardResource {
         html.append("<td class='summary-card'><h3>Despesas Casa</h3><div class='value'>R$ ").append(String.format("%,.2f", despesasCasa)).append("</div></td>");
         html.append("<td class='summary-card' style='background:#dcfce7;'><h3>Lucro Líquido</h3><div class='value'>R$ ").append(String.format("%,.2f", lucroLiquido)).append("</div></td>");
         html.append("</tr></table>");
-        
+
         html.append("<table class='col-container'><tr><td class='col'>");
+
+        html.append("<h2>Relação de produtos vendidos</h2>");
+        html.append("<table class='dados'><thead><tr><th>Produto</th><th>Qtd</th></tr></thead><tbody>");
+        
+        for (Map<String, Object> p : relacaoProdutos) {
+            html.append("<tr><td>").append(p.get("nome")).append("</td><td>").append(p.get("quantidade")).append("</td></tr>");
+        }
+
+        html.append("</tbody></table>");
+
+        html.append("<div style='text-align:right; font-weight:bold; font-size:11px; margin-top:-10px; margin-bottom:15px; color:#14532d;'>");
+        html.append("Total: ").append(totalItensGeral).append(" unidades vendidas");
+        html.append("</div>");
+
+        html.append("</td>");
+
+        html.append("<td class='col-spacer'></td><td class='col'>");
+
         html.append("<h2>Desempenho por tipo</h2>");
         html.append("<table class='dados'><thead><tr><th>Tipo</th><th>Qtd</th><th>Lucro</th></tr></thead><tbody>");
-    
+       
         for (Map.Entry<String, Double> entry : lucroPorTipo.entrySet()) {
             html.append("<tr><td>").append(entry.getKey()).append("</td>");
             html.append("<td>").append(quantidadePorTipo.getOrDefault(entry.getKey(), 0)).append("</td>");
@@ -611,34 +629,28 @@ public class DashboardResource {
         }
 
         html.append("</tbody></table>");
-
-        html.append("<div style='text-align:right; font-weight:bold; font-size:11px; margin-top:5px; color:#14532d;'>");
-        html.append("Total: ").append(totalItensGeral).append(" unidades vendidas");
-        html.append("</div>");
-
-        html.append("</td>");
-
-        html.append("<td class='col-spacer'></td>"); 
-        html.append("<td class='col'>");
-        
-        html.append("<h2>Ranking vendedores</h2>");
-        html.append("<table class='dados'><thead><tr><th>Vendedor</th><th>Vendido</th></tr></thead><tbody>");
-    
-        for (Map<String, Object> v : rankingVendedores) {
-            html.append("<tr><td>").append(v.get("vendedor")).append("</td><td>R$ ").append(String.format("%,.2f", v.get("totalVendido"))).append("</td></tr>");
-        }
-        
-        html.append("</tbody></table>"); 
         html.append("</td></tr></table>");
 
         html.append("<table class='col-container'><tr><td class='col'>");
+
+        html.append("<h2>Ranking vendedores</h2>");
+        html.append("<table class='dados'><thead><tr><th>Vendedor</th><th>Vendido</th></tr></thead><tbody>");
+      
+        for (Map<String, Object> v : rankingVendedores) {
+            html.append("<tr><td>").append(v.get("vendedor")).append("</td><td>R$ ").append(String.format("%,.2f", v.get("totalVendido"))).append("</td></tr>");
+        }
+      
+        html.append("</tbody></table>");
+        html.append("</td><td class='col-spacer'></td><td class='col'>");
+
         html.append("<h2>Indicadores gerais</h2>");
         html.append("<table class='dados'><tbody>");
         html.append("<tr><td>Total de vendas</td><td>").append(totalVendas).append("</td></tr>");
         html.append("<tr><td>Total de itens</td><td>").append(totalItensGeral).append("</td></tr>");
         html.append("<tr><td>Margem líquida</td><td>").append(String.format("%.1f", totalReceitas > 0 ? (lucroLiquido/totalReceitas)*100 : 0)).append("%</td></tr>");
         html.append("</tbody></table>");
-        html.append("</td><td class='col-spacer'></td><td class='col'></td></tr></table>");
+
+        html.append("</td></tr></table>");
         
         html.append("<div class='footer'>Relatório Gerencial - David Colchões | Sistema de Gestão Interna</div>");
         html.append("</body></html>");
