@@ -649,6 +649,7 @@ public class DashboardResource {
         html.append("<h2>Indicadores gerais</h2>");
         html.append("<table class='dados'><tbody>");
         html.append("<tr><td>Total de vendas</td><td>").append(totalVendas).append("</td></tr>");
+        html.append("<tr><td>Total de itens</td><td>").append(totalItensGeral).append("</td></tr>");
         html.append("<tr><td>Margem líquida</td><td>").append(String.format("%.1f", totalReceitas > 0 ? (lucroLiquido/totalReceitas)*100 : 0)).append("%</td></tr>");
         html.append("</tbody></table></td></tr></table>");
         
