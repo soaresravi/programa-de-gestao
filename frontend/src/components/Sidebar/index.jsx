@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChartColumn, House, Wallet, BanknoteArrowDown, BedDouble, Store, Truck, Settings, Menu } from 'lucide-react'; 
+import { ChartColumn, House, Wallet, BanknoteArrowDown, BedDouble, Store, Truck, Settings, Menu, Package } from 'lucide-react'; 
 
 import { useSidebar } from '../../contexts/SidebarContext';
 import styles from './Sidebar.module.scss';
