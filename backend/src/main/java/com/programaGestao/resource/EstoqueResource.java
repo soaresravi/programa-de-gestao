@@ -61,7 +61,7 @@ public class EstoqueResource {
         estoque.quantidade = dto.quantidade;
         
         estoque.persist();
-        return Response.status(201).entity(estoque).build();
+        return Response.status(Response.Status.CREATED).build();
 
     }
 
