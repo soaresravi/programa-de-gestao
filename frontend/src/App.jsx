@@ -10,7 +10,7 @@ import Cadastro from './pages/Cadastro';
 import EsqueciSenha from './pages/EsqueciSenha';
 import Cidades from './pages/Cidades';
 import Lojistas from './pages/Lojistas';
-import Estoque from './pages/Estoque';
+import Estoque from './pages/Estoque/EstoqueLoja';
 import Configuracoes from './pages/Configuracoes';
 
 const Produtos = lazy(() => import('./pages/Produtos'));
