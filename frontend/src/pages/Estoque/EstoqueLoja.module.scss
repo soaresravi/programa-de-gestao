@@ -177,6 +177,27 @@
 
 }
 
+.precosPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.labelValor {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.labelTotalModal {
+  font-size: 15px;
+  font-weight: 700;
+  color: $verde-titulos;
+  padding: 4px 8px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
 .formGroup {
 
   display: flex;

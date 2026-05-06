@@ -3,6 +3,8 @@ import styles from './EstoqueCard.module.scss';
 import { Ellipsis } from 'lucide-react';
 
 const EstoqueCard = ({ item, onClick }) => {
+
+  const valorTotal = (item.produtoPreco || 0) * (item.quantidade || 0);
   
   return (
   
@@ -16,8 +18,12 @@ const EstoqueCard = ({ item, onClick }) => {
     <div className={styles.info}>
       
       <h3 className={styles.nome}>{item.produtoNome}</h3>
-      <p className={styles.valorUnitario}>Valor unitário: R$ {item.produtoPreco?.toFixed(2)}</p>
-        
+
+      <div className={styles.precosContainer}>
+        <p className={styles.valorUnitario}>Unitário: R$ {item.produtoPreco?.toFixed(2)}</p>
+        <p className={styles.valorTotalCard}>Total: <strong>R$ {valorTotal.toFixed(2)}</strong></p>
+      </div>
+
       <div className={styles.estoqueBadge}>
         <span className={styles.qtdLabel}>Em estoque:</span>
         <span className={styles.qtdValor}>{item.quantidade}</span>

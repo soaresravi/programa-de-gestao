@@ -203,8 +203,14 @@ const EstoqueLoja = ({ addToast }) => {
                                     <img src={editandoItem.produtoFoto || 'placeholder.png'} alt={editandoItem.produtoNome} />
                                     
                                     <div className={styles.previewInfo}>
+                                        
                                         <strong>{editandoItem.produtoNome}</strong>
-                                        <span className={styles.labelValor}>Valor unitário: R$ {editandoItem.produtoPreco?.toFixed(2)}</span>
+                                        
+                                        <div className={styles.precosPreview}>
+                                            <span className={styles.labelValor}>Valor unitário: R$ {editandoItem.produtoPreco?.toFixed(2)}</span>
+                                            <span className={styles.labelTotalModal}> Total em estoque: R$ {(editandoItem.produtoPreco * formData.quantidade).toFixed(2)} </span>
+                                        </div>
+
                                     </div>
                                 
                                 </div>

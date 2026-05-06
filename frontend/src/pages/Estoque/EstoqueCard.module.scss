@@ -61,11 +61,26 @@
   margin-bottom: 4px;
 }
 
+.precosContainer {
+  margin: 8px 0;
+}
+
 .valorUnitario {
-  font-size: 13px;
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+.valorTotalCard {
+  
+  font-size: 14px;
   color: $verde-principal;
-  font-weight: 600;
-  margin-bottom: 12px;
+  margin: 0;
+  
+  strong {
+    font-weight: 700;
+  }
+
 }
 
 .estoqueBadge {
