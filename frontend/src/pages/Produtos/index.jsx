@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Package } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { useSidebar } from '../../contexts/SidebarContext';
 
+import { useSidebar } from '../../contexts/SidebarContext';
 import ModalProdutoDetalhes from './components/ModalProdutoDetalhes';
 import Sidebar from '../../components/Sidebar';
 import CardProduto from './components/CardProduto';

@@ -1,0 +1,207 @@
+@use '../../styles/variables' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  background-color: $fundo-padrao;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 32px;
+  transition: margin-left 0.3s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $verde-titulos;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $preto;
+}
+
+.novaCidadeBtn { // Mantendo o nome da sua classe de Cidades
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: $verde-escuro-textos;
+  color: $branco;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $verde-semi-escuro;
+    transform: scale(1.02);
+  }
+}
+
+.gridCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+// Estilos do Modal (Copiados exatamente da sua tela de Cidades)
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 470px;
+  padding: 24px;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba($preto, 0.1);
+  margin: 16px 0 24px;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalConfirm {
+  background-color: $fundo-padrao;
+  border-radius: 20px;
+  width: 400px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: $verde-titulos;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 14px;
+    color: $preto;
+    margin-bottom: 24px;
+  }
+}
+
+.confirmActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+
+  .cancelarBtn {
+    background-color: $verde-claro;
+    color: $verde-escuro-textos;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover { background-color: darken(#e8f5e9, 5%); }
+  }
+
+  .confirmarBtn {
+    background-color: #dc2626; // Vermelho padrão de erro/exclusão
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover { background-color: #b91c1c; }
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  label { font-size: 14px; font-weight: 700; color: $verde-escuro-textos; }
+  input, select {
+    background-color: $verde-claro;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: $preto;
+  }
+}
+
+.salvarBtn {
+  background-color: $verde-principal;
+  color: $branco;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  &:hover { background-color: $verde-semi-escuro; }
+}
+
+.excluirBtnTexto {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+
+.previewItem {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: $verde-claro;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+
+  img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid $verde-titulos;
+  }
+
+  .previewInfo {
+    display: flex;
+    flex-direction: column;
+    
+    strong {
+      color: $verde-escuro-textos;
+      font-size: 16px;
+    }
+
+    span {
+      color: $verde-principal;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+}

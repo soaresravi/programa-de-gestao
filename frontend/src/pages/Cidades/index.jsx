@@ -193,18 +193,19 @@ const Cidades = ({ addToast }) => {
             <div className={styles.modalOverlay} onClick={() => setExcluindoId(null)}>
                 <div className={styles.modalConfirm} onClick={(e) => e.stopPropagation()}>
                         
-                        <h3>Excluir cidade</h3>
-                        <p>Tem certeza que deseja excluir este frete?</p>
+                    <h3>Excluir cidade</h3>
+                    <p>Tem certeza que deseja excluir este frete?</p>
                        
-                        <div className={styles.confirmActions}>
-                            <button className={styles.cancelarBtn} onClick={() => setExcluindoId(null)}> Cancelar </button>
-                            <button className={styles.confirmarBtn} onClick={handleExcluir} disabled={loading}> {loading ? 'Excluindo...' : 'Excluir'} </button>
-                        </div>
-
+                    <div className={styles.confirmActions}>
+                        <button className={styles.cancelarBtn} onClick={() => setExcluindoId(null)}> Cancelar </button>
+                        <button className={styles.confirmarBtn} onClick={handleExcluir} disabled={loading}> {loading ? 'Excluindo...' : 'Excluir'} </button>
                     </div>
+
                 </div>
-            )}
-        </div>
+            </div>
+        )}
+        
+    </div>
     );
 };
 

@@ -17,6 +17,7 @@ const Sidebar = () => {
     { path: '/despesas/loja', icon: Wallet, label: 'Despesas da loja' },
     { path: '/vendas', icon: BanknoteArrowDown, label: 'Vendas' },
     { path: '/produtos', icon: BedDouble, label: 'Produtos' },
+    { path: '/estoque', icon: Package, label: 'Estoque' },
     { path: '/lojistas', icon: Store, label: 'Lojistas' },
     { path: '/cidades', icon: Truck, label: 'Cidades/frete' },
     { path: '/configuracoes', icon: Settings, label: 'Configurações' },
