@@ -31,14 +31,19 @@
 
 .menuButton {
   position: absolute;
-  top: 8px; right: 8px;
-  background: rgba($branco, 0.8);
+  top: 8px;
+  right: 8px;
+  background: transparent;
   border: none;
   border-radius: 50%;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   color: $preto;
-  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
 }
 
 .info {

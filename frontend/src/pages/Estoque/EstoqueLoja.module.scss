@@ -61,6 +61,13 @@
   gap: 24px;
 }
 
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
 .modalOverlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -205,23 +212,32 @@
 }
 
 .salvarBtn {
+  
   background-color: $verde-principal;
+  font-family: $fonte-principal;
   color: $branco;
   border: none;
   border-radius: 20px;
-  padding: 10px;
+  padding: 8px 24px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  &:hover { background-color: $verde-semi-escuro; }
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: $verde-semi-escuro;
+  }
+
 }
 
 .excluirBtnTexto {
   background: transparent;
   border: none;
   color: #dc2626;
+  font-family: $fonte-principal;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 5px;
   text-decoration: underline;
 }
 
